@@ -147,7 +147,7 @@ async function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch from Wikimedia "On this day" feed (births) via CORS proxy to bypass network errors
+// Fetch from Wikimedia "On this day" feed (births) via CORS proxy with detailed logging
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   celebsList.dataset.loaded = ''; // Clear flag until success
@@ -157,12 +157,19 @@ async function fetchCelebritiesForDate(mm, dd) {
   };
 
   try {
-    // Use CORS proxy to avoid "network error" from browser restrictions
+    // Test direct URL (for debugging)
+    console.log('Attempting fetch for:', `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`);
     const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+    console.log('Using proxy URL:', proxyUrl);
+
     const feedResp = await fetch(proxyUrl, { headers });
+    console.log('Response status:', feedResp.status);
     if (!feedResp.ok) throw new Error(`HTTP error! status: ${feedResp.status}`);
-    const feedJson = await feedResp.json();
+    
+    const feedText = await feedResp.text(); // Get raw text for debugging
+    console.log('Raw response:', feedText);
+    const feedJson = JSON.parse(feedText); // Parse to JSON
     const births = feedJson.births || [];
 
     if (!births.length) {
@@ -196,8 +203,9 @@ async function fetchCelebritiesForDate(mm, dd) {
     renderCelebrities(pages);
     celebsList.dataset.loaded = '1';
   } catch (err) {
-    console.error('Error fetching celebrities:', err);
-    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Check console for details. (Error: ${err.message})</div>`;
+    console.error('Fetch error details:', err);
+    // Fallback: Show a test message if fetch fails
+    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Error: ${err.message}. Check console for more details. (Test: Celebrity data fetch is blocked—try later or contact support.)</div>`;
   }
 }
 
