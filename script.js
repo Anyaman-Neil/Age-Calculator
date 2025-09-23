@@ -8,7 +8,6 @@ const $all = (sel) => Array.from(document.querySelectorAll(sel));
 const pad = (n) => n.toString().padStart(2, '0');
 
 function parseLocalDateTimeLocal(value) {
-  // value is like "2025-09-23T12:34" (no timezone) -> interpreted as local
   if (!value) return null;
   const d = new Date(value);
   return isNaN(d) ? null : d;
@@ -17,7 +16,7 @@ function parseLocalDateTimeLocal(value) {
 function toDateTimeLocalValue(d) {
   if (!d) return '';
   const year = d.getFullYear();
-  const mo = pad(d.getMonth()+1);
+  const mo = pad(d.getMonth() + 1);
   const day = pad(d.getDate());
   const hh = pad(d.getHours());
   const mm = pad(d.getMinutes());
@@ -61,9 +60,9 @@ function adjustDatetimeLocal(value, delta) {
   const sign = delta[0] === '-' ? -1 : 1;
   const unit = delta.slice(-1); // d,m,y
   const amount = parseInt(delta.slice(1, -1) || delta.slice(1)) || 1;
-  if (delta.includes('d')) dt.setDate(dt.getDate() + sign*amount);
-  if (delta.includes('m') && !delta.includes('mo')) dt.setMonth(dt.getMonth() + sign*amount);
-  if (delta.includes('y')) dt.setFullYear(dt.getFullYear() + sign*amount);
+  if (delta.includes('d')) dt.setDate(dt.getDate() + sign * amount);
+  if (delta.includes('m') && !delta.includes('mo')) dt.setMonth(dt.getMonth() + sign * amount);
+  if (delta.includes('y')) dt.setFullYear(dt.getFullYear() + sign * amount);
   return toDateTimeLocalValue(dt);
 }
 
@@ -91,26 +90,30 @@ currentEl.value = toDateTimeLocalValue(new Date());
 dobEl.value = ''; // user will fill
 
 // Small-controls wiring
-document.querySelectorAll('.small-controls button').forEach(btn=>{
-  btn.addEventListener('click', (e)=>{
+document.querySelectorAll('.small-controls button').forEach(btn => {
+  btn.addEventListener('click', (e) => {
     const action = btn.dataset.action; // 'dob' or 'current'
     const delta = btn.dataset.delta;   // like '+1d' or '-1m' or '+1y'
     const target = action === 'dob' ? dobEl : currentEl;
     target.value = adjustDatetimeLocal(target.value, delta);
-    calculateAndRender();
+    calculateAndRender(true); // Force recalc and celeb fetch
   });
 });
 
+// Add event listeners for input changes (fixes recognition issue)
+dobEl.addEventListener('change', () => calculateAndRender(true));
+currentEl.addEventListener('change', () => calculateAndRender(true));
+
 // Recalculate and reset
-recalcBtn.addEventListener('click', ()=> calculateAndRender(true));
-resetBtn.addEventListener('click', ()=>{
+recalcBtn.addEventListener('click', () => calculateAndRender(true));
+resetBtn.addEventListener('click', () => {
   dobEl.value = '';
   currentEl.value = toDateTimeLocalValue(new Date());
   calculateAndRender(true);
 });
 
 // live ticking every second to update H:M:S part
-let liveInterval = setInterval(()=> calculateAndRender(false), 1000);
+let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
 // calculate and update DOM
 async function calculateAndRender(forceFetchCelebs = false) {
@@ -124,23 +127,22 @@ async function calculateAndRender(forceFetchCelebs = false) {
     hmsEl.textContent = '';
     totalsEl.textContent = '';
     refsEl.textContent = '';
-    // still update celebs only when DOB has month/day
   } else {
     const diff = calculateYMDHMS(dobDate, currentDate);
     if (!diff) {
       ymdEl.textContent = 'Current date must be on/after DOB';
     } else {
-      ymdEl.innerHTML = `${diff.years} years, ${diff.months} months, ${diff.days} days`;
+      ymdEl.innerHTML = `${diff.years} years, ${diff.months} months, ${diff.days} days`; // Always shows months, even 0
       hmsEl.textContent = `${pad(diff.hours)}:${pad(diff.minutes)}:${pad(diff.seconds)} (hh:mm:ss)`;
       totalsEl.textContent = `Total: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`;
-      refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, {timeZone:userTz})} • Current: ${currentDate.toLocaleString(userLocale, {timeZone:userTz})}`;
+      refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, { timeZone: userTz })} • Current: ${currentDate.toLocaleString(userLocale, { timeZone: userTz })}`;
     }
   }
 
   // If we have a DOB (month/day), fetch celebs for that MM/DD
   if (dobDate && (forceFetchCelebs || !celebsList.dataset.loaded)) {
-    const mm = String(dobDate.getMonth()+1).padStart(2,'0');
-    const dd = String(dobDate.getDate()).padStart(2,'0');
+    const mm = String(dobDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(dobDate.getDate()).padStart(2, '0');
     fetchCelebritiesForDate(mm, dd);
   }
 }
@@ -149,12 +151,12 @@ async function calculateAndRender(forceFetchCelebs = false) {
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   celebsList.dataset.loaded = ''; // clear flag until success
+  const headers = { 'Accept': 'application/json', 'User-Agent': 'AgeCalculatorExample/1.0 (your-email@example.com)' }; // Replace with your real email
   try {
     const feedUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
-    const feedResp = await fetch(feedUrl, { headers: { 'Accept':'application/json', 'User-Agent': 'AgeCalculatorExample/1.0 (example@example.com)' }});
+    const feedResp = await fetch(feedUrl, { headers });
     if (!feedResp.ok) throw new Error('Failed retrieving feed');
     const feedJson = await feedResp.json();
-    // feedJson.births is an array, each has pages array
     const births = feedJson.births || [];
     // Flatten pages from births entries and dedupe by title
     const pages = [];
@@ -181,43 +183,34 @@ async function fetchCelebritiesForDate(mm, dd) {
 
     // For each page, fetch pageprops to get wikibase_item (QID), then fetch Wikidata entity for P569 (DOB) and P570 (DOD)
     const enriched = [];
-    for (const p of pages.slice(0, 60)) { // limit to first 60 entries to avoid too many requests
+    for (const p of pages.slice(0, 10)) { // Reduced to 10 to avoid rate limits
+      let qid = null;
+      let dob = null;
+      let dod = null;
       try {
-        const pagePropsUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageprops&titles=${encodeURIComponent(p.title)}`;
-        const ppResp = await fetch(pagePropsUrl);
-        const ppJson = await ppResp.json();
-        const pagesObj = ppJson.query && ppJson.query.pages;
-        let qid = null;
-        if (pagesObj) {
-          const keys = Object.keys(pagesObj);
-          if (keys.length) {
-            const pageObj = pagesObj[keys[0]];
-            qid = pageObj && pageObj.pageprops && pageObj.pageprops.wikibase_item;
-          }
+        const pagePropsUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageprops&titles=${encodeURIComponent(p.title)}&ppprop=wikibase_item`;
+        const ppResp = await fetch(pagePropsUrl, { headers });
+        if (ppResp.ok) {
+          const ppJson = await ppResp.json();
+          const pageId = Object.keys(ppJson.query.pages)[0];
+          qid = ppJson.query.pages[pageId].pageprops?.wikibase_item || null;
         }
-        let dob = null, dod = null, occupation = null;
         if (qid) {
           // fetch Wikidata entity JSON
           const wdUrl = `https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`;
-          const wdResp = await fetch(wdUrl);
+          const wdResp = await fetch(wdUrl, { headers });
           if (wdResp.ok) {
             const wdJson = await wdResp.json();
             const ent = wdJson.entities && wdJson.entities[qid];
             if (ent && ent.claims) {
-              // P569 = date of birth, P570 = date of death, P106 = occupation
               const claims = ent.claims;
               if (claims.P569 && claims.P569[0] && claims.P569[0].mainsnak && claims.P569[0].mainsnak.datavalue) {
                 const dv = claims.P569[0].mainsnak.datavalue.value;
-                // dv.time is like "+1973-04-24T00:00:00Z" (may include precision)
                 dob = dv.time || null;
               }
               if (claims.P570 && claims.P570[0] && claims.P570[0].mainsnak && claims.P570[0].mainsnak.datavalue) {
                 const dv = claims.P570[0].mainsnak.datavalue.value;
                 dod = dv.time || null;
-              }
-              if (claims.P106 && claims.P106[0] && claims.P106[0].mainsnak && claims.P106[0].mainsnak.datavalue) {
-                // P106 gives occupation as an entity - we can get the label if available in 'labels' or skip
-                // For simplicity: skip extracting occupation entity here
               }
             }
           }
@@ -226,10 +219,7 @@ async function fetchCelebritiesForDate(mm, dd) {
         // Parse the Wikidata times (if present). If time strings exist, convert to JS Date:
         const parseWikidataTime = (t) => {
           if (!t) return null;
-          // Wikidata time format: "+YYYY-MM-DDT00:00:00Z" possibly with negative years for BCE.
-          // We'll strip leading '+' and trailing 'Z' then pass to Date (note: negative years may not parse well)
           const cleaned = t.replace(/^\+/, '').replace(/Z$/, '');
-          // For cases without time portion, append 'T00:00:00'
           return new Date(cleaned);
         };
 
@@ -242,7 +232,8 @@ async function fetchCelebritiesForDate(mm, dd) {
           dodWikidata: parseWikidataTime(dod)
         });
       } catch (e) {
-        // skip entry on error
+        // Skip entry on error, but continue with others
+        console.error(`Error enriching ${p.title}:`, e);
       }
     }
 
@@ -251,7 +242,7 @@ async function fetchCelebritiesForDate(mm, dd) {
     celebsList.dataset.loaded = '1';
   } catch (err) {
     console.error(err);
-    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Please try again later.</div>`;
+    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Please try again later. (Error: ${err.message})</div>`;
   }
 }
 
@@ -288,23 +279,20 @@ function renderCelebrities(list) {
         btn.className = 'btn';
         btn.textContent = 'Use';
         btn.title = 'Load this celebrity in the Date of Birth field';
-        btn.addEventListener('click', ()=>{
-          // set DOB to celebrity dob (local midnight if no time)
-          // Convert dob to local datetime-local string
+        btn.addEventListener('click', () => {
           const localStr = toDateTimeLocalValue(dob);
           dobEl.value = localStr;
-          // If celeb deceased set current to their DOD, else keep current as now
           if (dod) currentEl.value = toDateTimeLocalValue(dod);
           else currentEl.value = toDateTimeLocalValue(new Date());
           calculateAndRender(true);
-          window.scrollTo({top:0,behavior:'smooth'});
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         const detailsBtn = document.createElement('button');
         detailsBtn.className = 'btn';
         detailsBtn.style.background = '#6b7280';
         detailsBtn.textContent = 'Total time';
-        detailsBtn.addEventListener('click', ()=>{
+        detailsBtn.addEventListener('click', () => {
           alert(`${item.title}\n\nDOB: ${dob.toLocaleString(userLocale)}\n${dod ? ('DOD: ' + dod.toLocaleString(userLocale) + '\n') : ''}\n\nLived/has lived: ${diff.years} years, ${diff.months} months, ${diff.days} days, ${diff.hours} hours, ${diff.minutes} minutes, ${diff.seconds} seconds\n\nTotals: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`);
         });
 
@@ -315,7 +303,6 @@ function renderCelebrities(list) {
         small.textContent = `${dob ? 'Born: ' + dob.toLocaleString(userLocale) : 'Born: unknown'}${dod ? ' • Died: ' + dod.toLocaleString(userLocale) : ''}`;
         left.appendChild(small);
       } else {
-        // invalid calculation
         const noData = document.createElement('div');
         noData.className = 'small muted';
         noData.textContent = 'Date info incomplete.';
@@ -323,8 +310,7 @@ function renderCelebrities(list) {
         const btn = document.createElement('button');
         btn.className = 'btn';
         btn.textContent = 'Use (approx)';
-        btn.addEventListener('click', ()=>{
-          // try to set whatever we have
+        btn.addEventListener('click', () => {
           if (dob) dobEl.value = toDateTimeLocalValue(dob);
           if (dod) currentEl.value = toDateTimeLocalValue(dod);
           calculateAndRender(true);
@@ -332,7 +318,6 @@ function renderCelebrities(list) {
         right.appendChild(btn);
       }
     } else {
-      // no dob info: show basic "Use" to populate name search or open page
       const openBtn = document.createElement('a');
       openBtn.href = item.pageUrl || '#';
       openBtn.target = '_blank';
