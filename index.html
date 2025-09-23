@@ -37,99 +37,126 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script><!DOCTYPE html>
+        </script><!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age calculator</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h1>Age calculator</h1>
-    <p>Enter Date of Birth and Current date (defaults to now). Timezone & locale come from your browser.</p>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Age calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Amazon Associates disclosure -->
+  <meta name="description" content="Calculate your age and explore birthday gift ideas. As an Amazon Associate, I earn from qualifying purchases." />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Age calculator</h1>
+      <p class="muted">Enter Date of Birth and Current date (defaults to now). Timezone & locale come from your browser.</p>
+    </header>
 
-    <div>
-      <label for="dob">Date of Birth</label>
-      <input type="datetime-local" id="dob" name="dob">
-      <div class="small-controls">
-        <button data-action="dob" data-delta="-1d">-</button>
-        <button data-action="dob" data-delta="+1d">+</button>
-        <button data-action="dob" data-delta="-1m">-</button>
-        <button data-action="dob" data-delta="+1m">+</button>
-        <button data-action="dob" data-delta="-1y">-</button>
-        <button data-action="dob" data-delta="+1y">+</button>
+    <section class="panel inputs">
+      <div class="input-block">
+        <label for="dob">Date of Birth</label>
+        <input id="dob" type="datetime-local" />
+        <div class="small-controls">
+          <button data-action="dob" data-delta="-1d">-1 day</button>
+          <button data-action="dob" data-delta="+1d">+1 day</button>
+          <button data-action="dob" data-delta="-1m">-1 month</button>
+          <button data-action="dob" data-delta="+1m">+1 month</button>
+          <button data-action="dob" data-delta="-1y">-1 year</button>
+          <button data-action="dob" data-delta="+1y">+1 year</button>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label for="current">Current date</label>
-      <input type="datetime-local" id="current" name="current">
-      <div class="small-controls">
-        <button data-action="current" data-delta="-1d">-</button>
-        <button data-action="current" data-delta="+1d">+</button>
-        <button data-action="current" data-delta="-1m">-</button>
-        <button data-action="current" data-delta="+1m">+</button>
-        <button data-action="current" data-delta="-1y">-</button>
-        <button data-action="current" data-delta="+1y">+</button>
+      <div class="input-block">
+        <label for="current">Current date</label>
+        <input id="current" type="datetime-local" />
+        <div class="small-controls">
+          <button data-action="current" data-delta="-1d">-1 day</button>
+          <button data-action="current" data-delta="+1d">+1 day</button>
+          <button data-action="current" data-delta="-1m">-1 month</button>
+          <button data-action="current" data-delta="+1m">+1 month</button>
+          <button data-action="current" data-delta="-1y">-1 year</button>
+          <button data-action="current" data-delta="+1y">+1 year</button>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <span>Detected timezone: <span id="tz"></span></span>
-      <span>Locale: <span id="locale"></span></span>
-    </div>
-
-    <h2>Your age (live)</h2>
-    <div id="ymd">—</div>
-    <div id="hms">—</div>
-    <div id="totals">—</div>
-    <div id="refs">—</div>
-
-    <div>
-      <button id="recalc">Recalculate now</button>
-      <button id="reset">Reset</button>
-    </div>
-
-    <h2>Famous people born on the same day</h2>
-    <p>Fetched from Wikipedia's “On this day” feed + Wikidata.</p>
-    <div id="celebs-list"></div>
-    <p>If an entry lacks an exact time, midnight is assumed for seconds/hours calculations.</p>
-
-    <h2>Recommended Birthday Gifts & Time-Related Products</h2>
-    <p>Celebrate your age with these picks! As an Amazon Associate, I earn from qualifying purchases.</p>
-    <div>
-      <div>
-        <a href="https://www.amazon.com/dp/B08L5N6L5N" target="_blank" rel="noreferrer">
-          <img src="https://m.media-amazon.com/images/I/71e3z9uW-UL._AC_SL1500_.jpg" alt="Fire-Boltt Smart Watch - Track Your Time">
-        </a>
-        <p>Fire-Boltt Smart Watch - Track Your Time</p>
-        <p>Price: <a href="https://www.amazon.com/dp/B08L5N6L5N" target="_blank" rel="noreferrer">Check on Amazon</a></p>
+      <div class="meta">
+        <div>Detected timezone: <strong id="tz"></strong></div>
+        <div>Locale: <strong id="locale"></strong></div>
       </div>
-      <div>
-        <a href="https://www.amazon.com/dp/B07P9J8Y8Y" target="_blank" rel="noreferrer">
-          <img src="https://m.media-amazon.com/images/I/81z5X8X8X8L._AC_SL1500_.jpg" alt="Birthday Gift Hamper - Perfect for Celebrations">
-        </a>
-        <p>Birthday Gift Hamper - Perfect for Celebrations</p>
-        <p>Price: <a href="https://www.amazon.com/dp/B07P9J8Y8Y" target="_blank" rel="noreferrer">Check on Amazon</a></p>
-      </div>
-      <div>
-        <a href="https://www.amazon.com/dp/B01M0X9X9X" target="_blank" rel="noreferrer">
-          <img src="https://m.media-amazon.com/images/I/61y6Z6Y6Y6L._AC_SL1500_.jpg" alt="Stylish Wall Clock - Timeless Decor">
-        </a>
-        <p>Stylish Wall Clock - Timeless Decor</p>
-        <p>Price: <a href="https://www.amazon.com/dp/B01M0X9X9X" target="_blank" rel="noreferrer">Check on Amazon</a></p>
-      </div>
-    </div>
+    </section>
 
-    <div>
-      <p>Ad placeholder — insert AdSense code here (requires custom domain)</p>
-    </div>
+    <section class="panel result">
+      <h2>Your age (live)</h2>
+      <div class="age-box">
+        <div id="ymd" class="bigline">—</div>
+        <div id="hms" class="smallline">—</div>
+        <div id="totals" class="muted smallline">—</div>
+        <div id="refs" class="xsmall muted">—</div>
+      </div>
 
-    <footer>
-      <p>Built with plain HTML/CSS/JS — uses Wikimedia Feed & Wikidata APIs.</p>
+      <div class="buttons">
+        <button id="recalc">Recalculate now</button>
+        <button id="reset">Reset</button>
+      </div>
+    </section>
+
+    <section class="panel celebs">
+      <div class="panel-head">
+        <h2>Famous people born on the same day</h2>
+        <div class="muted">Fetched from Wikipedia's “On this day” feed + Wikidata.</div>
+      </div>
+
+      <div id="celebs-list" class="celebs-list">
+        <!-- dynamically populated -->
+      </div>
+      <div id="celebs-note" class="xsmall muted">If an entry lacks an exact time, midnight is assumed for seconds/hours calculations.</div>
+    </section>
+
+    <!-- Amazon Affiliates Section -->
+    <section class="panel affiliates">
+      <h2>Recommended Birthday Gifts & Time-Related Products</h2>
+      <p class="muted">Celebrate your age with these picks! As an Amazon Associate, I earn from qualifying purchases.</p>
+      <div class="affiliate-grid">
+        <!-- Affiliate Item 1: Smart Watch -->
+        <div class="affiliate-item">
+          <a href="https://www.amazon.in/dp/B0B5B6PQ5M?tag=birthdaytools-21" target="_blank" rel="noopener noreferrer">
+            <img src="https://m.media-amazon.com/images/I/61ZjlBKEQ5L._AC_UL320_.jpg" alt="Fire-Boltt Smart Watch" style="width:100%; max-width:200px; border-radius:8px;">
+            <p>Fire-Boltt Smart Watch - Track Your Time</p>
+          </a>
+          <p class="muted small">Price: Check on Amazon</p>
+        </div>
+
+        <!-- Affiliate Item 2: Birthday Gift Set -->
+        <div class="affiliate-item">
+          <a href="https://www.amazon.in/dp/B08L3Z1Z3J?tag=birthdaytools-21" target="_blank" rel="noopener noreferrer">
+            <img src="https://m.media-amazon.com/images/I/71q8+U8ZxLL._AC_UL320_.jpg" alt="Birthday Gift Hamper" style="width:100%; max-width:200px; border-radius:8px;">
+            <p>Birthday Gift Hamper - Perfect for Celebrations</p>
+          </a>
+          <p class="muted small">Price: Check on Amazon</p>
+        </div>
+
+        <!-- Affiliate Item 3: Wall Clock -->
+        <div class="affiliate-item">
+          <a href="https://www.amazon.in/dp/B07V4N2V7S?tag=birthdaytools-21" target="_blank" rel="noopener noreferrer">
+            <img src="https://m.media-amazon.com/images/I/71F6Ntz6+9L._AC_UL320_.jpg" alt="Wall Clock" style="width:100%; max-width:200px; border-radius:8px;">
+            <p>Stylish Wall Clock - Timeless Decor</p>
+          </a>
+          <p class="muted small">Price: Check on Amazon</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="panel">
+      <div class="adsense">
+        <!-- AdSense placeholder - for future use if you get a custom domain -->
+        <div class="ad-placeholder">Ad placeholder — insert AdSense code here (requires custom domain)</div>
+      </div>
+      <div class="credits muted">Built with plain HTML/CSS/JS — uses Wikimedia Feed & Wikidata APIs.</div>
     </footer>
+  </main>
 
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'983cab200f751f0a',t:'MTc1ODY1ODA0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
