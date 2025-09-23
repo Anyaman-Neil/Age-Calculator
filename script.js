@@ -147,7 +147,7 @@ async function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch from Wikimedia "On this day" feed (births)
+// Fetch from Wikimedia "On this day" feed (births) via CORS proxy to bypass network errors
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   celebsList.dataset.loaded = ''; // Clear flag until success
@@ -157,8 +157,10 @@ async function fetchCelebritiesForDate(mm, dd) {
   };
 
   try {
-    const feedUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
-    const feedResp = await fetch(feedUrl, { headers });
+    // Use CORS proxy to avoid "network error" from browser restrictions
+    const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+    const feedResp = await fetch(proxyUrl, { headers });
     if (!feedResp.ok) throw new Error(`HTTP error! status: ${feedResp.status}`);
     const feedJson = await feedResp.json();
     const births = feedJson.births || [];
