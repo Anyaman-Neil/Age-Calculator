@@ -1,5 +1,5 @@
 // script.js
-// Age calculator + celebrities from Wikimedia feed + Wikidata enrichment
+// Age calculator + celebrities from Wikimedia feed
 // Save as script.js and keep in same folder as index.html/style.css
 
 // --- Utilities ---
@@ -147,29 +147,24 @@ async function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch from Wikimedia "On this day" feed (births) via CORS proxy with detailed logging
+// Fetch from Wikimedia "On this day" feed (births) via CORS proxy without custom headers
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   celebsList.dataset.loaded = ''; // Clear flag until success
-  const headers = { 
-    'Accept': 'application/json', 
-    'User-Agent': 'AgeCalculatorExample/1.0 (alphatroniumgoku@gmail.com)' // Your email
-  };
 
   try {
-    // Test direct URL (for debugging)
-    console.log('Attempting fetch for:', `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`);
+    // Use CORS proxy without custom headers to avoid User-Agent conflict
     const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
-    console.log('Using proxy URL:', proxyUrl);
+    console.log('Attempting fetch with proxy:', proxyUrl);
 
-    const feedResp = await fetch(proxyUrl, { headers });
+    const feedResp = await fetch(proxyUrl);
     console.log('Response status:', feedResp.status);
     if (!feedResp.ok) throw new Error(`HTTP error! status: ${feedResp.status}`);
     
-    const feedText = await feedResp.text(); // Get raw text for debugging
+    const feedText = await feedResp.text();
     console.log('Raw response:', feedText);
-    const feedJson = JSON.parse(feedText); // Parse to JSON
+    const feedJson = JSON.parse(feedText);
     const births = feedJson.births || [];
 
     if (!births.length) {
@@ -204,8 +199,7 @@ async function fetchCelebritiesForDate(mm, dd) {
     celebsList.dataset.loaded = '1';
   } catch (err) {
     console.error('Fetch error details:', err);
-    // Fallback: Show a test message if fetch fails
-    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Error: ${err.message}. Check console for more details. (Test: Celebrity data fetch is blocked—try later or contact support.)</div>`;
+    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Error: ${err.message}. Check console for more details.</div>`;
   }
 }
 
