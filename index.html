@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Age calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Add your AdSense <meta> if required by your account -->
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Age calculator</h1>
+      <p class="muted">Enter Date of Birth and Current date (defaults to now). Timezone & locale come from your browser.</p>
+    </header>
+
+    <section class="panel inputs">
+      <div class="input-block">
+        <label for="dob">Date of Birth</label>
+        <input id="dob" type="datetime-local" />
+        <div class="small-controls">
+          <button data-action="dob" data-delta="-1d">-1 day</button>
+          <button data-action="dob" data-delta="+1d">+1 day</button>
+          <button data-action="dob" data-delta="-1m">-1 month</button>
+          <button data-action="dob" data-delta="+1m">+1 month</button>
+          <button data-action="dob" data-delta="-1y">-1 year</button>
+          <button data-action="dob" data-delta="+1y">+1 year</button>
+        </div>
+      </div>
+
+      <div class="input-block">
+        <label for="current">Current date</label>
+        <input id="current" type="datetime-local" />
+        <div class="small-controls">
+          <button data-action="current" data-delta="-1d">-1 day</button>
+          <button data-action="current" data-delta="+1d">+1 day</button>
+          <button data-action="current" data-delta="-1m">-1 month</button>
+          <button data-action="current" data-delta="+1m">+1 month</button>
+          <button data-action="current" data-delta="-1y">-1 year</button>
+          <button data-action="current" data-delta="+1y">+1 year</button>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div>Detected timezone: <strong id="tz"></strong></div>
+        <div>Locale: <strong id="locale"></strong></div>
+      </div>
+    </section>
+
+    <section class="panel result">
+      <h2>Your age (live)</h2>
+      <div class="age-box">
+        <div id="ymd" class="bigline">—</div>
+        <div id="hms" class="smallline">—</div>
+        <div id="totals" class="muted smallline">—</div>
+        <div id="refs" class="xsmall muted">—</div>
+      </div>
+
+      <div class="buttons">
+        <button id="recalc">Recalculate now</button>
+        <button id="reset">Reset</button>
+      </div>
+    </section>
+
+    <section class="panel celebs">
+      <div class="panel-head">
+        <h2>Famous people born on the same day</h2>
+        <div class="muted">Fetched from Wikipedia's “On this day” feed + Wikidata.</div>
+      </div>
+
+      <div id="celebs-list" class="celebs-list">
+        <!-- dynamically populated -->
+      </div>
+      <div id="celebs-note" class="xsmall muted">If an entry lacks an exact time, midnight is assumed for seconds/hours calculations.</div>
+    </section>
+
+    <footer class="panel">
+      <div class="adsense">
+        <!-- AdSense placeholder - replace with your client/slot -->
+        <div class="ad-placeholder">Ad placeholder — insert AdSense code here (replace ca-pub-XXXXXXXXXXXXXXXX)</div>
+      </div>
+      <div class="credits muted">Built with plain HTML/CSS/JS — uses Wikimedia Feed & Wikidata APIs.</div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
