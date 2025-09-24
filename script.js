@@ -1,5 +1,5 @@
 // script.js
-// Age calculator + celebrities from Wikipedia MediaWiki API (CORS-enabled)
+// Age calculator + celebrities from Wikimedia feed via reliable proxy with dynamic affiliate section
 // Save as script.js and keep in same folder as index.html/style.css
 
 // --- Utilities ---
@@ -66,6 +66,45 @@ function adjustDatetimeLocal(value, delta) {
   return toDateTimeLocalValue(dt);
 }
 
+// Affiliate products data (manage here)
+const products = [
+  {
+    name: 'Fire-Boltt Smart Watch - Track Your Time',
+    image: 'https://m.media-amazon.com/images/I/71e3z9uW-UL._AC_SL1500_.jpg',
+    link: 'https://www.amazon.com/dp/B08L5N6L5N',
+    alt: 'Fire-Boltt Smart Watch - Track Your Time'
+  },
+  {
+    name: 'Birthday Gift Hamper - Perfect for Celebrations',
+    image: 'https://m.media-amazon.com/images/I/81z5X8X8X8L._AC_SL1500_.jpg',
+    link: 'https://www.amazon.com/dp/B07P9J8Y8Y',
+    alt: 'Birthday Gift Hamper - Perfect for Celebrations'
+  },
+  {
+    name: 'Stylish Wall Clock - Timeless Decor',
+    image: 'https://m.media-amazon.com/images/I/61y6Z6Y6Y6L._AC_SL1500_.jpg',
+    link: 'https://www.amazon.com/dp/B01M0X9X9X',
+    alt: 'Stylish Wall Clock - Timeless Decor'
+  }
+];
+
+// Render affiliate products
+function renderAffiliateProducts() {
+  const container = $('#affiliate-products');
+  container.innerHTML = '<p>Celebrate your age with these picks! As an Amazon Associate, I earn from qualifying purchases.</p>';
+  products.forEach(product => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <a href="${product.link}" target="_blank" rel="noreferrer">
+        <img src="${product.image}" alt="${product.alt}">
+      </a>
+      <p>${product.name}</p>
+      <p>Price: <a href="${product.link}" target="_blank" rel="noreferrer">Check on Amazon</a></p>
+    `;
+    container.appendChild(div);
+  });
+}
+
 // DOM refs
 const dobEl = $('#dob');
 const currentEl = $('#current');
@@ -110,7 +149,7 @@ resetBtn.addEventListener('click', () => {
   calculateAndRender(true);
 });
 
-// Live ticking (every second for H:M:S)
+// Live ticking
 let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
 // Calculate and render
@@ -139,61 +178,95 @@ function calculateAndRender(forceFetchCelebs = false) {
   totalsEl.textContent = `Total: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`;
   refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, { timeZone: userTz })} • Current: ${currentDate.toLocaleString(userLocale, { timeZone: userTz })}`;
 
-  // Fetch celebs only on DOB change (not every second to avoid rate limits)
-  if (forceFetchCelebs && dobDate) {
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const mm = monthNames[dobDate.getMonth()];
-    const dd = dobDate.getDate();
+  if (forceFetchCelebs) {
+    const mm = String(dobDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(dobDate.getDate()).padStart(2, '0');
     fetchCelebritiesForDate(mm, dd);
   }
 }
 
-// Fetch celebrities from Wikipedia MediaWiki API (CORS-enabled)
-async function fetchCelebritiesForDate(monthName, day) {
-  celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${monthName} ${day}…</div>`;
+// Fetch celebrities from Wikimedia via cors-anywhere proxy
+async function fetchCelebritiesForDate(mm, dd) {
+  celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   try {
-    const searchQuery = `born on ${monthName} ${day}`;
-    const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&srwhat=text&format=json&origin=*&srlimit=5`;
-    console.log('Attempting Wikipedia API fetch:', apiUrl);
-
-    const response = await fetch(apiUrl, { mode: 'cors' });
+    const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
+    const proxyUrl = `https://cors-anywhere.herokuapp.com/${apiUrl}`;
+    const headers = {
+      'User-Agent': 'AgeCalculatorExample/1.0 (alphatroniumgoku@gmail.com)'
+    };
+    const response = await fetch(proxyUrl, { headers });
     console.log('Response status:', response.status);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     
-    const data = await response.json();
-    console.log('Raw response:', data);
+    const feedText = await response.text();
+    console.log('Raw response length:', feedText.length);
+    const feedJson = JSON.parse(feedText);
+    const births = feedJson.births || [];
 
-    const searchResults = data.query?.search || [];
-    if (!searchResults.length) {
-      celebsList.innerHTML = `<div class="muted">No celebrities found for ${monthName} ${day}.</div>`;
+    if (!births.length) {
+      celebsList.innerHTML = `<div class="muted">No celebrities found on ${mm}/${dd}.</div>`;
       return;
     }
 
-    celebsList.innerHTML = '';
-    searchResults.slice(0, 5).forEach(result => {
-      const el = document.createElement('div');
-      el.className = 'celebrity';
-      const left = document.createElement('div');
-      left.className = 'left';
-      left.innerHTML = `<div style="font-weight:600">${result.title}</div>
-                        <div class="small">${result.snippet.replace(/<[^>]*>/g, '').trim()}...</div>`;
-      const right = document.createElement('div');
-      right.className = 'right';
-      const openBtn = document.createElement('a');
-      openBtn.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(result.title)}`;
-      openBtn.target = '_blank';
-      openBtn.className = 'btn';
-      openBtn.textContent = 'Open page';
-      right.appendChild(openBtn);
-      el.appendChild(left);
-      el.appendChild(right);
-      celebsList.appendChild(el);
-    });
+    const pages = [];
+    const seen = new Set();
+    for (const b of births) {
+      if (!b.pages) continue;
+      for (const p of b.pages) {
+        const title = p.titles && (p.titles.normalized || p.titles.display) || p.title || '';
+        if (!title || seen.has(title)) continue;
+        seen.add(title);
+        pages.push({
+          title,
+          extract: p.extract || 'No description available',
+          pageUrl: (p.content_urls && p.content_urls.desktop && p.content_urls.desktop.page) || ''
+        });
+      }
+    }
+
+    if (pages.length === 0) {
+      celebsList.innerHTML = `<div class="muted">No entries found.</div>`;
+      return;
+    }
+
+    renderCelebrities(pages.slice(0, 5));
+    celebsList.dataset.loaded = '1';
   } catch (error) {
     console.error("Celebrity fetch error:", error);
     celebsList.innerHTML = `<div class="muted">Failed to load famous birthdays. Error: ${error.message}</div>`;
   }
 }
 
+function renderCelebrities(list) {
+  if (!list || list.length === 0) {
+    celebsList.innerHTML = `<div class="muted">No entries found.</div>`;
+    return;
+  }
+  celebsList.innerHTML = '';
+  for (const item of list) {
+    const el = document.createElement('div');
+    el.className = 'celebrity';
+    const left = document.createElement('div');
+    left.className = 'left';
+    left.innerHTML = `<div style="font-weight:600">${item.title}</div>
+                      <div class="small">${item.extract}</div>
+                      <div class="small muted">Page: ${item.pageUrl ? `<a href="${item.pageUrl}" target="_blank" rel="noreferrer">open</a>` : '—'}</div>`;
+    const right = document.createElement('div');
+    right.className = 'right';
+    const openBtn = document.createElement('a');
+    openBtn.href = item.pageUrl || '#';
+    openBtn.target = '_blank';
+    openBtn.className = 'btn';
+    openBtn.textContent = 'Open page';
+    right.appendChild(openBtn);
+    el.appendChild(left);
+    el.appendChild(right);
+    celebsList.appendChild(el);
+  }
+}
+
 // Initial render
-calculateAndRender(true);
+document.addEventListener('DOMContentLoaded', () => {
+  renderAffiliateProducts();
+  calculateAndRender(true);
+});
