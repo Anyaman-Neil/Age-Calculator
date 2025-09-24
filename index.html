@@ -75,12 +75,17 @@
       <!-- Conversion Calculator Panel -->
       <div class="calculator-panel" id="conversion-calculator" style="display: none;">
         <div class="panel">
-          <label for="conversion-type">Select Conversion Type:</label>
+          <label for="conversion-category">Category:</label>
+          <select id="conversion-category">
+            <option value="length">Length</option>
+            <option value="speed">Speed</option>
+            <option value="time">Time</option>
+            <option value="currency">Currency</option>
+          </select>
+
+          <label for="conversion-type">Select Conversion:</label>
           <select id="conversion-type">
-            <option value="distance">Distance (km to miles)</option>
-            <option value="time">Time (hours to minutes)</option>
-            <option value="speed">Speed (km/h to m/s)</option>
-            <option value="length">Length (cm to inches)</option>
+            <!-- Populated dynamically in JS -->
           </select>
 
           <label for="input-value">Input Value:</label>
