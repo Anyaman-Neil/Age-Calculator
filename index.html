@@ -75,16 +75,32 @@
       <!-- Conversion Calculator Panel -->
       <div class="calculator-panel" id="conversion-calculator" style="display: none;">
         <div class="panel">
-          <label for="conversion-type">Select Conversion Type:</label>
-          <select id="conversion-type">
-            <option value="distance">Distance (km to miles)</option>
-            <option value="time">Time (hours to minutes)</option>
-            <option value="speed">Speed (km/h to m/s)</option>
-            <option value="length">Length (cm to inches)</option>
-          </select>
+          <div class="conversion-categories">
+            <button class="category-button active" data-category="length">Length</button>
+            <button class="category-button" data-category="currency">Currency</button>
+            <button class="category-button" data-category="time">Time</button>
+            <button class="category-button" data-category="speed">Speed</button>
+          </div>
 
-          <label for="input-value">Input Value:</label>
-          <input type="number" id="input-value" placeholder="Enter value" step="0.01">
+          <div>
+            <label for="from-value">From Value:</label>
+            <input type="number" id="from-value" placeholder="Enter value (positive/negative)">
+          </div>
+
+          <div>
+            <label for="from-unit">From Unit:</label>
+            <select id="from-unit"></select>
+          </div>
+
+          <div>
+            <label for="to-value">To Value (optional for reverse):</label>
+            <input type="number" id="to-value" placeholder="Enter value (optional)">
+          </div>
+
+          <div>
+            <label for="to-unit">To Unit:</label>
+            <select id="to-unit"></select>
+          </div>
 
           <button id="convert">Convert</button>
           <div id="conversion-result" class="age-box">—</div>
