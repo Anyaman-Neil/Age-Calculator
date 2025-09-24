@@ -69,22 +69,52 @@ function adjustDatetimeLocal(value, delta) {
 // Affiliate products data (manage here)
 const products = [
   {
-    name: 'Fire-Boltt Smart Watch - Track Your Time',
-    image: 'https://m.media-amazon.com/images/I/61ZjlBKEQ5L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/dp/B0B5B6PQ5M?tag=birthdaytools-21',
-    alt: 'Fire-Boltt Smart Watch - Track Your Time'
+    name: 'One94store Crystal Ball Night Lamp',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-1&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=39918f876a0a57dba40fd6fd2652f941&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'One94store Crystal Ball Night Lamp'
   },
   {
-    name: 'Birthday Gift Hamper - Perfect for Celebrations',
-    image: 'https://m.media-amazon.com/images/I/71q8+U8ZxLL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/dp/B08L3Z1Z3J?tag=birthdaytools-21',
-    alt: 'Birthday Gift Hamper - Perfect for Celebrations'
+    name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-7&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=b74ea1afcaebb59f4e164add5b6f16e8&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday'
   },
   {
-    name: 'Stylish Wall Clock - Timeless Decor',
-    image: 'https://m.media-amazon.com/images/I/71F6Ntz6+9L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/dp/B07V4N2V7S?tag=birthdaytools-21',
-    alt: 'Stylish Wall Clock - Timeless Decor'
+    name: 'VRB-Dec-Artificial-Crochet-Bouquet',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=08c142b799529104ee2f8323d66c4351&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'VRB-Dec-Artificial-Crochet-Bouquet'
+  },
+  {
+    name: 'Motorola-g45-Pantone-Moss-128',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-13&linkCode=ll1&tag=birthdaytools-21&linkId=9d89fc68c76f7ce3c2cc1b788222c0ec&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'Motorola-g45-Pantone-Moss-128'
+  },
+  {
+    name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-5&linkCode=ll1&tag=birthdaytools-21&linkId=a6165a9c77996478e54ed01ee2b5af64&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance'
+  },
+  {
+    name: 'OnePlus-Super-Silver-128GB-Storage',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-3&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=11e371b8fbfd0177a94933aba0c6f7bf&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'OnePlus-Super-Silver-128GB-Storage'
+  },
+  {
+    name: 'Modern-Living-Tables-Furniture-Shelves',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-6&linkCode=ll1&tag=birthdaytools-21&linkId=97e0e5bc6667f70a94d42b3c957c5541&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'Modern-Living-Tables-Furniture-Shelves'
+  },
+  {
+    name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture',
+    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=3c0a20b1131f89fdb0f4f919c9d8f14b&language=en_IN&ref_=as_li_ss_tl',
+    alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture'
   }
 ];
 
@@ -94,7 +124,7 @@ function renderAffiliateProducts() {
   container.innerHTML = ''; // Clear existing content
   products.forEach(product => {
     const div = document.createElement('div');
-    div.className = 'product-card'; // Add a class for styling
+    div.className = 'product-card';
     div.innerHTML = `
       <a href="${product.link}" target="_blank" rel="noreferrer" class="product-link">
         <img src="${product.image}" alt="${product.alt}" class="product-image" onerror="this.src='https://via.placeholder.com/200x200?text=Product+Image';">
