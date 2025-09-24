@@ -91,7 +91,7 @@ const products = [
 // Render affiliate products
 function renderAffiliateProducts() {
   const container = $('#affiliate-products');
-  container.innerHTML = '<p>Celebrate your age with these picks! As an Amazon Associate, I earn from qualifying purchases.</p>';
+  container.innerHTML = ''; // Clear existing content
   products.forEach(product => {
     const div = document.createElement('div');
     div.innerHTML = `
