@@ -1,0 +1,6 @@
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Point to sitemap
+Sitemap: https://anyaman-neil.github.io/sitemap.xml
