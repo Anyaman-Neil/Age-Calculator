@@ -1,12 +1,15 @@
 :root {
-  --bg: #f7fafc;
-  --card: #fff;
-  --muted: #6b7280;
-  --accent: #2563eb;
+  --bg: #f3f4f6; /* Soft gray background */
+  --card: #fff; /* White cards */
+  --muted: #6b7280; /* Gray text */
+  --accent: #2dd4bf; /* Teal-blue accent */
+  --border: #e5e7eb; /* Light gray borders */
 }
+
 * {
   box-sizing: border-box;
 }
+
 body {
   font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
   color: #111;
@@ -14,84 +17,122 @@ body {
   margin: 0;
   padding: 24px;
 }
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
 }
+
 header {
   text-align: center;
   margin-bottom: 18px;
 }
+
 h1 {
   font-size: 26px;
   margin: 6px 0;
+  color: var(--accent);
 }
+
 .muted {
   color: var(--muted);
 }
+
 .panel {
   background: var(--card);
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 6px 18px rgba(20, 20, 20, 0.04);
+  border: 1px solid var(--border);
 }
+
 .inputs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   align-items: start;
 }
+
 .input-block label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
+  color: var(--accent);
 }
+
 .input-block input {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  transition: border-color 0.2s;
 }
+
+.input-block input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
 .small-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 8px;
 }
+
 .small-controls button {
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border: 1px solid var(--border);
+  background: var(--card);
   cursor: pointer;
   font-size: 13px;
+  color: var(--accent);
+  transition: background 0.2s, color 0.2s;
 }
+
+.small-controls button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 .meta {
   grid-column: 1 / -1;
   margin-top: 8px;
+  color: var(--muted);
 }
+
 .result .age-box {
   padding: 14px;
   border-radius: 8px;
   background: #f1f5f9;
+  border: 1px solid var(--border);
 }
+
 .bigline {
   font-size: 20px;
   font-weight: 700;
+  color: var(--accent);
 }
+
 .smallline {
   font-size: 14px;
   margin-top: 6px;
+  color: var(--muted);
 }
+
 .xsmall {
   font-size: 12px;
 }
+
 .buttons {
   margin-top: 12px;
   display: flex;
   gap: 8px;
 }
+
 .buttons button {
   padding: 8px 12px;
   background: var(--accent);
@@ -99,12 +140,24 @@ h1 {
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
+  transition: background 0.2s;
 }
+
+.buttons button:hover {
+  background: #15b9a9; /* Darker teal on hover */
+}
+
 .buttons button#reset {
-  background: #fff;
+  background: var(--card);
   color: #111;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
 }
+
+.buttons button#reset:hover {
+  background: #f3f4f6;
+  color: var(--accent);
+}
+
 .celebs-list {
   margin-top: 12px;
   display: flex;
@@ -114,28 +167,40 @@ h1 {
   overflow: auto;
   padding-right: 6px;
 }
+
 .celebrity {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   padding: 10px;
-  background: #fff;
+  background: var(--card);
   border-radius: 8px;
-  border: 1px solid #eef2f6;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
 }
+
+.celebrity:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .celebrity .left {
   flex: 1;
 }
+
 .celebrity .right {
   display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: flex-end;
 }
+
 .celebrity .small {
   font-size: 13px;
   color: var(--muted);
 }
+
 .celebrity .btn {
   padding: 6px 8px;
   border-radius: 8px;
@@ -144,7 +209,13 @@ h1 {
   border: none;
   cursor: pointer;
   font-size: 13px;
+  transition: background 0.2s;
 }
+
+.celebrity .btn:hover {
+  background: #059669;
+}
+
 .ad-placeholder {
   height: 90px;
   border-radius: 8px;
@@ -153,30 +224,53 @@ h1 {
   align-items: center;
   justify-content: center;
   color: var(--muted);
+  border: 1px solid var(--border);
 }
+
 .affiliate-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-top: 12px;
 }
+
 .affiliate-item {
   text-align: center;
+  background: var(--card);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+
+.affiliate-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .affiliate-item a {
   text-decoration: none;
   color: #111;
 }
+
 .affiliate-item p {
   margin: 8px 0;
   font-size: 14px;
+  color: var(--accent);
 }
+
 .affiliate-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
   transition: transform 0.2s;
 }
+
 .affiliate-item img:hover {
   transform: scale(1.05);
 }
+
 @media (max-width: 640px) {
   .inputs {
     grid-template-columns: 1fr;
@@ -187,5 +281,8 @@ h1 {
   }
   .celebrity .right {
     align-items: flex-start;
+  }
+  .affiliate-grid {
+    grid-template-columns: 1fr;
   }
 }
