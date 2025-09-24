@@ -147,15 +147,14 @@ async function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch from Wikimedia "On this day" feed (births) via CORS proxy without custom headers
+// Fetch from Wikimedia "On this day" feed (births) via corsproxy.io
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
   celebsList.dataset.loaded = ''; // Clear flag until success
 
   try {
-    // Use CORS proxy without custom headers to avoid User-Agent conflict
     const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
     console.log('Attempting fetch with proxy:', proxyUrl);
 
     const feedResp = await fetch(proxyUrl);
@@ -172,7 +171,6 @@ async function fetchCelebritiesForDate(mm, dd) {
       return;
     }
 
-    // Extract unique pages from births
     const pages = [];
     const seen = new Set();
     for (const b of births) {
@@ -194,7 +192,6 @@ async function fetchCelebritiesForDate(mm, dd) {
       return;
     }
 
-    // Render the list
     renderCelebrities(pages);
     celebsList.dataset.loaded = '1';
   } catch (err) {
