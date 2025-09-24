@@ -1,5 +1,5 @@
 // script.js
-// Age calculator + celebrities from Wikipedia MediaWiki API (CORS-enabled) with dynamic affiliate section
+// Multi Calculator Tool: Age, Conversions, Permutation/Combination
 // Save as script.js and keep in same folder as index.html/style.css
 
 // --- Utilities ---
@@ -66,41 +66,50 @@ function adjustDatetimeLocal(value, delta) {
   return toDateTimeLocalValue(dt);
 }
 
-// Affiliate products data (manage here)
+// Factorial function for permutations/combinations
+function factorial(n) {
+  if (n < 0) return 0;
+  if (n === 0 || n === 1) return 1;
+  let result = 1;
+  for (let i = 2; i <= n; i++) result *= i;
+  return result;
+}
+
+// Affiliate products data
 const products = [
   {
     name: 'One94store Crystal Ball Night Lamp',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/51rV+9X4CQL._AC_UL320_.jpg',
     link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-1&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=39918f876a0a57dba40fd6fd2652f941&language=en_IN&ref_=as_li_ss_tl',
     alt: 'One94store Crystal Ball Night Lamp'
   },
   {
     name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/61j2j1G5VJL._AC_UL320_.jpg',
     link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-7&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=b74ea1afcaebb59f4e164add5b6f16e8&language=en_IN&ref_=as_li_ss_tl',
     alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday'
   },
   {
     name: 'VRB-Dec-Artificial-Crochet-Bouquet',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/61U6C1d6Y0L._AC_UL320_.jpg',
     link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=08c142b799529104ee2f8323d66c4351&language=en_IN&ref_=as_li_ss_tl',
     alt: 'VRB-Dec-Artificial-Crochet-Bouquet'
   },
   {
     name: 'Motorola-g45-Pantone-Moss-128',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/61l7U4d+1XL._AC_UL320_.jpg',
     link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-13&linkCode=ll1&tag=birthdaytools-21&linkId=9d89fc68c76f7ce3c2cc1b788222c0ec&language=en_IN&ref_=as_li_ss_tl',
     alt: 'Motorola-g45-Pantone-Moss-128'
   },
   {
     name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/71Y7UjX0eJL._AC_UL320_.jpg',
     link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-5&linkCode=ll1&tag=birthdaytools-21&linkId=a6165a9c77996478e54ed01ee2b5af64&language=en_IN&ref_=as_li_ss_tl',
     alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance'
   },
   {
     name: 'OnePlus-Super-Silver-128GB-Storage',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://m.media-amazon.com/images/I/71Kn99V4x7L._AC_UL320_.jpg',
     link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-3&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=11e371b8fbfd0177a94933aba0c6f7bf&language=en_IN&ref_=as_li_ss_tl',
     alt: 'OnePlus-Super-Silver-128GB-Storage'
   },
@@ -148,6 +157,18 @@ const refsEl = $('#refs');
 const celebsList = $('#celebs-list');
 const recalcBtn = $('#recalc');
 const resetBtn = $('#reset');
+const conversionTypeEl = $('#conversion-type');
+const inputValueEl = $('#input-value');
+const convertBtn = $('#convert');
+const conversionResultEl = $('#conversion-result');
+const nValueEl = $('#n-value');
+const rValueEl = $('#r-value');
+const calculatePermBtn = $('#calculate-perm');
+const calculateCombBtn = $('#calculate-comb');
+const permResultEl = $('#perm-result');
+const combResultEl = $('#comb-result');
+const tabButtons = $all('.tab-button');
+const panels = $all('.calculator-panel');
 
 // Setup locale & timezone
 const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -158,6 +179,17 @@ localeEl.textContent = userLocale;
 // Initialize inputs
 currentEl.value = toDateTimeLocalValue(new Date());
 dobEl.value = '';
+
+// Tab switching
+tabButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    panels.forEach(panel => panel.style.display = 'none');
+    const tabId = button.getAttribute('data-tab');
+    $(`#${tabId}`).style.display = 'block';
+  });
+});
 
 // Small-controls wiring
 document.querySelectorAll('.small-controls button').forEach(btn => {
@@ -170,7 +202,7 @@ document.querySelectorAll('.small-controls button').forEach(btn => {
   });
 });
 
-// Event listeners
+// Event listeners for Age Calculator
 dobEl.addEventListener('change', () => calculateAndRender(true));
 currentEl.addEventListener('change', () => calculateAndRender(false));
 recalcBtn.addEventListener('click', () => calculateAndRender(true));
@@ -180,10 +212,10 @@ resetBtn.addEventListener('click', () => {
   calculateAndRender(true);
 });
 
-// Live ticking (every second for H:M:S)
+// Live ticking for Age Calculator
 let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
-// Calculate and render
+// Calculate and render for Age Calculator
 function calculateAndRender(forceFetchCelebs = false) {
   const dobVal = dobEl.value;
   const currentVal = currentEl.value || toDateTimeLocalValue(new Date());
@@ -209,7 +241,6 @@ function calculateAndRender(forceFetchCelebs = false) {
   totalsEl.textContent = `Total: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`;
   refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, { timeZone: userTz })} • Current: ${currentDate.toLocaleString(userLocale, { timeZone: userTz })}`;
 
-  // Fetch celebs only on DOB change (not every second to avoid rate limits)
   if (forceFetchCelebs && dobDate) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const mm = monthNames[dobDate.getMonth()];
@@ -218,35 +249,27 @@ function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch celebrities from Wikipedia MediaWiki API (CORS-enabled)
+// Fetch celebrities for Age Calculator
 async function fetchCelebritiesForDate(monthName, day) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${monthName} ${day}…</div>`;
   try {
     const searchQuery = `born on ${monthName} ${day}`;
     const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&srwhat=text&format=json&origin=*&srlimit=5`;
-    console.log('Attempting Wikipedia API fetch:', apiUrl);
-
     const response = await fetch(apiUrl, { mode: 'cors' });
-    console.log('Response status:', response.status);
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
     const data = await response.json();
-    console.log('Raw response:', data);
-
     const searchResults = data.query?.search || [];
     if (!searchResults.length) {
       celebsList.innerHTML = `<div class="muted">No celebrities found for ${monthName} ${day}.</div>`;
       return;
     }
-
     celebsList.innerHTML = '';
     searchResults.slice(0, 5).forEach(result => {
       const el = document.createElement('div');
       el.className = 'celebrity';
       const left = document.createElement('div');
       left.className = 'left';
-      left.innerHTML = `<div style="font-weight:600">${result.title}</div>
-                        <div class="small">${result.snippet.replace(/<[^>]*>/g, '').trim()}...</div>`;
+      left.innerHTML = `<div style="font-weight:600">${result.title}</div><div class="small">${result.snippet.replace(/<[^>]*>/g, '').trim()}...</div>`;
       const right = document.createElement('div');
       right.className = 'right';
       const openBtn = document.createElement('a');
@@ -265,13 +288,64 @@ async function fetchCelebritiesForDate(monthName, day) {
   }
 }
 
+// Conversion Calculator Logic
+const conversionFactors = {
+  distance: { from: 'km', to: 'miles', factor: 0.621371 },
+  time: { from: 'hours', to: 'minutes', factor: 60 },
+  speed: { from: 'km/h', to: 'm/s', factor: 0.277778 },
+  length: { from: 'cm', to: 'inches', factor: 0.393701 }
+};
+
+convertBtn.addEventListener('click', () => {
+  const type = conversionTypeEl.value;
+  const value = parseFloat(inputValueEl.value);
+  if (isNaN(value) || value < 0) {
+    conversionResultEl.textContent = 'Please enter a valid positive number';
+    return;
+  }
+  const { from, to, factor } = conversionFactors[type];
+  const result = value * factor;
+  conversionResultEl.textContent = `${value} ${from} = ${result.toFixed(2)} ${to}`;
+});
+
+// Permutation/Combination Calculator Logic
+function permutation(n, r) {
+  return factorial(n) / factorial(n - r);
+}
+
+function combination(n, r) {
+  return factorial(n) / (factorial(r) * factorial(n - r));
+}
+
+calculatePermBtn.addEventListener('click', () => {
+  const n = parseInt(nValueEl.value);
+  const r = parseInt(rValueEl.value);
+  if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
+    permResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
+    return;
+  }
+  permResultEl.textContent = `Permutation (nPr) = ${permutation(n, r).toFixed(0)}`;
+});
+
+calculateCombBtn.addEventListener('click', () => {
+  const n = parseInt(nValueEl.value);
+  const r = parseInt(rValueEl.value);
+  if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
+    combResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
+    return;
+  }
+  combResultEl.textContent = `Combination (nCr) = ${combination(n, r).toFixed(0)}`;
+});
+
 // Initial render
 document.addEventListener('DOMContentLoaded', () => {
   renderAffiliateProducts();
   calculateAndRender(true);
+  // Activate the first tab by default
+  tabButtons[0].click();
 });
 
-// Add inline styles for visual appeal (can move to style.css later)
+// Inline styles (move to style.css later if needed)
 const style = document.createElement('style');
 style.textContent = `
   .product-card {
