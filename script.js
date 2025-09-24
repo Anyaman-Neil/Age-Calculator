@@ -70,20 +70,20 @@ function adjustDatetimeLocal(value, delta) {
 const products = [
   {
     name: 'Fire-Boltt Smart Watch - Track Your Time',
-    image: 'https://m.media-amazon.com/images/I/71e3z9uW-UL._AC_SL1500_.jpg',
-    link: 'https://www.amazon.com/dp/B08L5N6L5N',
+    image: 'https://m.media-amazon.com/images/I/61ZjlBKEQ5L._AC_UL320_.jpg',
+    link: 'https://www.amazon.in/dp/B0B5B6PQ5M?tag=birthdaytools-21',
     alt: 'Fire-Boltt Smart Watch - Track Your Time'
   },
   {
     name: 'Birthday Gift Hamper - Perfect for Celebrations',
-    image: 'https://m.media-amazon.com/images/I/81z5X8X8X8L._AC_SL1500_.jpg',
-    link: 'https://www.amazon.com/dp/B07P9J8Y8Y',
+    image: 'https://m.media-amazon.com/images/I/71q8+U8ZxLL._AC_UL320_.jpg',
+    link: 'https://www.amazon.in/dp/B08L3Z1Z3J?tag=birthdaytools-21',
     alt: 'Birthday Gift Hamper - Perfect for Celebrations'
   },
   {
     name: 'Stylish Wall Clock - Timeless Decor',
-    image: 'https://m.media-amazon.com/images/I/61y6Z6Y6Y6L._AC_SL1500_.jpg',
-    link: 'https://www.amazon.com/dp/B01M0X9X9X',
+    image: 'https://m.media-amazon.com/images/I/71F6Ntz6+9L._AC_UL320_.jpg',
+    link: 'https://www.amazon.in/dp/B07V4N2V7S?tag=birthdaytools-21',
     alt: 'Stylish Wall Clock - Timeless Decor'
   }
 ];
@@ -94,12 +94,13 @@ function renderAffiliateProducts() {
   container.innerHTML = ''; // Clear existing content
   products.forEach(product => {
     const div = document.createElement('div');
+    div.className = 'product-card'; // Add a class for styling
     div.innerHTML = `
-      <a href="${product.link}" target="_blank" rel="noreferrer">
-        <img src="${product.image}" alt="${product.alt}">
+      <a href="${product.link}" target="_blank" rel="noreferrer" class="product-link">
+        <img src="${product.image}" alt="${product.alt}" class="product-image" onerror="this.src='https://via.placeholder.com/200x200?text=Product+Image';">
       </a>
-      <p>${product.name}</p>
-      <p>Price: <a href="${product.link}" target="_blank" rel="noreferrer">Check on Amazon</a></p>
+      <p class="product-name">${product.name}</p>
+      <p class="product-price">Price: <a href="${product.link}" target="_blank" rel="noreferrer" class="price-link">Check on Amazon</a></p>
     `;
     container.appendChild(div);
   });
@@ -239,3 +240,51 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAffiliateProducts();
   calculateAndRender(true);
 });
+
+// Add inline styles for visual appeal (can move to style.css later)
+const style = document.createElement('style');
+style.textContent = `
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+  .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .product-image {
+    max-width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+  }
+  .product-link:hover img {
+    opacity: 0.8;
+  }
+  .product-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+    text-align: center;
+  }
+  .product-price {
+    font-size: 14px;
+    text-align: center;
+  }
+  .price-link {
+    color: #0073aa;
+    text-decoration: none;
+  }
+  .price-link:hover {
+    text-decoration: underline;
+    color: #005d87;
+  }
+`;
+document.head.appendChild(style);
