@@ -1,5 +1,5 @@
 // script.js
-// Age calculator + celebrities from Wikimedia feed
+// Age calculator + celebrities from Albin Larsson's "On This Day" API
 // Save as script.js and keep in same folder as index.html/style.css
 
 // --- Utilities ---
@@ -54,7 +54,7 @@ function calculateYMDHMS(start, end) {
   return { years, months, days, hours, minutes, seconds, totalSeconds, totalMinutes, totalHours, totalDays };
 }
 
-// Add/subtract month/day/year on a datetime-local input (value string)
+// Add/subtract month/day/year on a datetime-local input
 function adjustDatetimeLocal(value, delta) {
   const dt = parseLocalDateTimeLocal(value) || new Date();
   const sign = delta[0] === '-' ? -1 : 1;
@@ -85,26 +85,24 @@ const userLocale = navigator.language || 'en-US';
 tzEl.textContent = userTz;
 localeEl.textContent = userLocale;
 
-// Initialize inputs: DOB empty, Current default to now
+// Initialize inputs
 currentEl.value = toDateTimeLocalValue(new Date());
-dobEl.value = ''; // user will fill
+dobEl.value = '';
 
 // Small-controls wiring
 document.querySelectorAll('.small-controls button').forEach(btn => {
   btn.addEventListener('click', (e) => {
-    const action = btn.dataset.action; // 'dob' or 'current'
-    const delta = btn.dataset.delta;   // like '+1d' or '-1m' or '+1y'
+    const action = btn.dataset.action;
+    const delta = btn.dataset.delta;
     const target = action === 'dob' ? dobEl : currentEl;
     target.value = adjustDatetimeLocal(target.value, delta);
-    calculateAndRender(true); // Force recalc and celeb fetch
+    calculateAndRender(true);
   });
 });
 
-// Add event listeners for input changes
+// Event listeners
 dobEl.addEventListener('change', () => calculateAndRender(true));
-currentEl.addEventListener('change', () => calculateAndRender(true));
-
-// Recalculate and reset
+currentEl.addEventListener('change', () => calculateAndRender(false));
 recalcBtn.addEventListener('click', () => calculateAndRender(true));
 resetBtn.addEventListener('click', () => {
   dobEl.value = '';
@@ -112,11 +110,11 @@ resetBtn.addEventListener('click', () => {
   calculateAndRender(true);
 });
 
-// live ticking every second to update H:M:S part
+// Live ticking
 let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
-// calculate and update DOM
-async function calculateAndRender(forceFetchCelebs = false) {
+// Calculate and render
+function calculateAndRender(forceFetchCelebs = false) {
   const dobVal = dobEl.value;
   const currentVal = currentEl.value || toDateTimeLocalValue(new Date());
   const dobDate = parseLocalDateTimeLocal(dobVal);
@@ -127,106 +125,63 @@ async function calculateAndRender(forceFetchCelebs = false) {
     hmsEl.textContent = '';
     totalsEl.textContent = '';
     refsEl.textContent = '';
-  } else {
-    const diff = calculateYMDHMS(dobDate, currentDate);
-    if (!diff) {
-      ymdEl.textContent = 'Current date must be on/after DOB';
-    } else {
-      ymdEl.innerHTML = `${diff.years} years, ${diff.months} months, ${diff.days} days`; // Always shows months
-      hmsEl.textContent = `${pad(diff.hours)}:${pad(diff.minutes)}:${pad(diff.seconds)} (hh:mm:ss)`;
-      totalsEl.textContent = `Total: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`;
-      refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, { timeZone: userTz })} • Current: ${currentDate.toLocaleString(userLocale, { timeZone: userTz })}`;
-    }
+    return;
   }
 
-  // If we have a DOB (month/day), fetch celebs for that MM/DD
-  if (dobDate && (forceFetchCelebs || !celebsList.dataset.loaded)) {
+  const diff = calculateYMDHMS(dobDate, currentDate);
+  if (!diff) {
+    ymdEl.textContent = 'Current date must be on/after DOB';
+    return;
+  }
+
+  ymdEl.innerHTML = `${diff.years} years, ${diff.months} months, ${diff.days} days`;
+  hmsEl.textContent = `${pad(diff.hours)}:${pad(diff.minutes)}:${pad(diff.seconds)} (hh:mm:ss)`;
+  totalsEl.textContent = `Total: ${diff.totalDays} days • ${diff.totalHours} hours • ${diff.totalMinutes} minutes • ${diff.totalSeconds} seconds`;
+  refsEl.textContent = `DOB: ${dobDate.toLocaleString(userLocale, { timeZone: userTz })} • Current: ${currentDate.toLocaleString(userLocale, { timeZone: userTz })}`;
+
+  if (forceFetchCelebs) {
     const mm = String(dobDate.getMonth() + 1).padStart(2, '0');
     const dd = String(dobDate.getDate()).padStart(2, '0');
-    await fetchCelebritiesForDate(mm, dd);
+    fetchCelebritiesForDate(mm, dd);
   }
 }
 
-// Fetch from Wikimedia "On this day" feed (births) via corsproxy.io
+// Fetch celebrities from Albin Larsson's API
 async function fetchCelebritiesForDate(mm, dd) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${mm}/${dd}…</div>`;
-  celebsList.dataset.loaded = ''; // Clear flag until success
-
   try {
-    const apiUrl = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${mm}/${dd}`;
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`;
-    console.log('Attempting fetch with proxy:', proxyUrl);
+    const apiUrl = `https://byabbe.se/on-this-day/${mm}/${dd}/births.json`;
+    const response = await fetch(apiUrl, { mode: 'cors' });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
 
-    const feedResp = await fetch(proxyUrl);
-    console.log('Response status:', feedResp.status);
-    if (!feedResp.ok) throw new Error(`HTTP error! status: ${feedResp.status}`);
-    
-    const feedText = await feedResp.text();
-    console.log('Raw response:', feedText);
-    const feedJson = JSON.parse(feedText);
-    const births = feedJson.births || [];
-
+    celebsList.innerHTML = '';
+    const births = data.births.slice(0, 5); // Limit to 5 for brevity
     if (!births.length) {
       celebsList.innerHTML = `<div class="muted">No celebrities found on ${mm}/${dd}.</div>`;
       return;
     }
 
-    const pages = [];
-    const seen = new Set();
-    for (const b of births) {
-      if (!b.pages) continue;
-      for (const p of b.pages) {
-        const title = p.titles && (p.titles.normalized || p.titles.display) || p.title || '';
-        if (!title || seen.has(title)) continue;
-        seen.add(title);
-        pages.push({
-          title,
-          extract: p.extract || 'No description available',
-          pageUrl: (p.content_urls && p.content_urls.desktop && p.content_urls.desktop.page) || ''
-        });
-      }
-    }
-
-    if (pages.length === 0) {
-      celebsList.innerHTML = `<div class="muted">No entries found.</div>`;
-      return;
-    }
-
-    renderCelebrities(pages);
-    celebsList.dataset.loaded = '1';
-  } catch (err) {
-    console.error('Fetch error details:', err);
-    celebsList.innerHTML = `<div class="muted">Failed to fetch celebrity list. Error: ${err.message}. Check console for more details.</div>`;
+    births.forEach(birth => {
+      const el = document.createElement('div');
+      el.className = 'celebrity';
+      const left = document.createElement('div');
+      left.className = 'left';
+      left.innerHTML = `<div style="font-weight:600">${birth.year}: ${birth.description.split('(')[0].trim()}</div>`;
+      const right = document.createElement('div');
+      right.className = 'right';
+      const openBtn = document.createElement('a');
+      openBtn.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(birth.description.split('(')[1]?.replace(')', '')) || 'Unknown'}`;
+      openBtn.target = '_blank';
+      openBtn.className = 'btn';
+      openBtn.textContent = 'Open page';
+      right.appendChild(openBtn);
+      el.appendChild(left);
+      el.appendChild(right);
+      celebsList.appendChild(el);
+    });
+  } catch (error) {
+    console.error("Celebrity fetch error:", error);
+    celebsList.innerHTML = `<div class="muted">Failed to load famous birthdays. Error: ${error.message}</div>`;
   }
 }
-
-function renderCelebrities(list) {
-  if (!list || list.length === 0) {
-    celebsList.innerHTML = `<div class="muted">No entries found.</div>`;
-    return;
-  }
-  celebsList.innerHTML = '';
-  for (const item of list) {
-    const el = document.createElement('div');
-    el.className = 'celebrity';
-    const left = document.createElement('div');
-    left.className = 'left';
-    left.innerHTML = `<div style="font-weight:600">${item.title}</div>
-                      <div class="small">${item.extract}</div>
-                      <div class="small muted">Page: ${item.pageUrl ? `<a href="${item.pageUrl}" target="_blank" rel="noreferrer">open</a>` : '—'}</div>`;
-    const right = document.createElement('div');
-    right.className = 'right';
-    const openBtn = document.createElement('a');
-    openBtn.href = item.pageUrl || '#';
-    openBtn.target = '_blank';
-    openBtn.className = 'btn';
-    openBtn.textContent = 'Open page';
-    right.appendChild(openBtn);
-    el.appendChild(left);
-    el.appendChild(right);
-    celebsList.appendChild(el);
-  }
-}
-
-// initial render
-calculateAndRender(true);
