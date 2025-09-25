@@ -486,6 +486,25 @@ function sciCalculate() {
   }
 }
 
+sciDisplay.addEventListener('keydown', (e) => {
+  if ($('#sci-calc').style.display !== 'block') return; // Only handle when sci-calc is active
+  e.preventDefault(); // Prevent direct typing
+  console.log('Key pressed:', e.key);
+  const keyMap = {
+    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+    '+': '+', '-': '-', '*': '*', '/': '/', '^': '^', '.': '.', '(': '(', ')': ')',
+    'Enter': sciCalculate, 'Escape': sciClear, 'Backspace': sciBackspace,
+    's': 'sin(', 'c': 'cos(', 't': 'tan(', 'l': 'log(', 'q': 'sqrt(', 'e': 'exp(',
+    'p': 'Math.PI', 'E': 'Math.E'
+  };
+  const action = keyMap[e.key];
+  if (typeof action === 'string') {
+    sciAppend(action);
+  } else if (typeof action === 'function') {
+    action();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded, initializing...');
   renderAffiliateProducts();
