@@ -1,6 +1,6 @@
 // script.js
-// Multi Calculator Tool: Age, Conversions, Permutation/Combination
-// Save as script.js and keep in same folder as index.html/style.css
+// Multi Calculator Tool: Age, Conversions, Permutation/Combination, Scientific
+// Save as script.js in same folder as index.html/style.css
 
 // --- Utilities ---
 const $ = (sel) => document.querySelector(sel);
@@ -23,7 +23,6 @@ function toDateTimeLocalValue(d) {
   return `${year}-${mo}-${day}T${hh}:${mm}`;
 }
 
-// Calendar math: compute Y M D h m s between start and end (end >= start)
 function calculateYMDHMS(start, end) {
   start = new Date(start); end = new Date(end);
   if (isNaN(start) || isNaN(end) || end < start) return null;
@@ -54,11 +53,10 @@ function calculateYMDHMS(start, end) {
   return { years, months, days, hours, minutes, seconds, totalSeconds, totalMinutes, totalHours, totalDays };
 }
 
-// Add/subtract month/day/year on a datetime-local input
 function adjustDatetimeLocal(value, delta) {
   const dt = parseLocalDateTimeLocal(value) || new Date();
   const sign = delta[0] === '-' ? -1 : 1;
-  const unit = delta.slice(-1); // d,m,y
+  const unit = delta.slice(-1);
   const amount = parseInt(delta.slice(1, -1) || delta.slice(1)) || 1;
   if (delta.includes('d')) dt.setDate(dt.getDate() + sign * amount);
   if (delta.includes('m') && !delta.includes('mo')) dt.setMonth(dt.getMonth() + sign * amount);
@@ -66,7 +64,6 @@ function adjustDatetimeLocal(value, delta) {
   return toDateTimeLocalValue(dt);
 }
 
-// Factorial function for permutations/combinations
 function factorial(n) {
   if (n < 0) return 0;
   if (n === 0 || n === 1) return 1;
@@ -75,56 +72,29 @@ function factorial(n) {
   return result;
 }
 
-// Conversion units and factors (non-currency)
 const units = {
   length: {
     base: 'm',
     factors: {
-      mm: 0.001,
-      cm: 0.01,
-      m: 1,
-      km: 1000,
-      inch: 0.0254,
-      foot: 0.3048,
-      yard: 0.9144,
-      mile: 1609.34,
-      nautical_mile: 1852,
-      light_year: 9.4607e15,
-      au: 1.496e11,
-      parsec: 3.0857e16,
-      planck_length: 1.616255e-35
+      mm: 0.001, cm: 0.01, m: 1, km: 1000, inch: 0.0254, foot: 0.3048, yard: 0.9144, mile: 1609.34,
+      nautical_mile: 1852, light_year: 9.4607e15, au: 1.496e11, parsec: 3.0857e16, planck_length: 1.616255e-35
     }
   },
   time: {
     base: 's',
     factors: {
-      ms: 0.001,
-      s: 1,
-      min: 60,
-      h: 3600,
-      day: 86400,
-      week: 604800,
-      month: 2629746, // approximate (30.42 days)
-      year: 31556952 // approximate (365.24 days)
+      ms: 0.001, s: 1, min: 60, h: 3600, day: 86400, week: 604800, month: 2629746, year: 31556952
     }
   },
   speed: {
     base: 'm/s',
     factors: {
-      'm/s': 1,
-      'km/h': 0.277778,
-      mph: 0.44704,
-      'ft/s': 0.3048,
-      knot: 0.514444,
-      'km/s': 1000,
-      'mile/s': 1609.34,
-      'c': 299792458 // speed of light
+      'm/s': 1, 'km/h': 0.277778, mph: 0.44704, 'ft/s': 0.3048, knot: 0.514444, 'km/s': 1000, 'mile/s': 1609.34, 'c': 299792458
     }
   },
   currency: {
     base: 'USD',
-    currencies: [
-      'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL',
+    currencies: ['AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL',
       'BSD', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHE', 'CHF', 'CHW', 'CLF', 'CLP', 'CNY', 'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF',
       'DKK', 'DOP', 'DZD', 'EGP', 'ERN', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GEL', 'GGP', 'GHS', 'GIP', 'GMD', 'GNF', 'GTQ', 'GYD', 'HKD', 'HNL',
       'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JEP', 'JMD', 'JOD', 'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KPW', 'KRW',
@@ -132,15 +102,13 @@ const units = {
       'MXN', 'MYR', 'MZN', 'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK', 'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD',
       'RUB', 'RWF', 'SAR', 'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP', 'SLE', 'SLL', 'SOS', 'SRD', 'SSP', 'STN', 'STX', 'SYP', 'SZL', 'THB', 'TJS',
       'TMT', 'TND', 'TOP', 'TRY', 'TTD', 'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND', 'VUV', 'WST', 'XAF', 'XAG', 'XAU',
-      'XCD', 'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW', 'ZWL'
-    ],
-    rates: {} // Populated dynamically or fallback
+      'XCD', 'XDR', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW', 'ZWL'],
+    rates: {}
   }
 };
 
 let currencyDataFetched = false;
 
-// Fallback static rates (approximate Sep 2025 values - USD base)
 const fallbackRates = {
   'AED': 3.67, 'AFN': 70.45, 'ALL': 91.20, 'AMD': 387.50, 'ANG': 1.79, 'AOA': 890.00, 'ARS': 970.00, 'AUD': 1.50, 'AWG': 1.80, 'AZN': 1.70,
   'BAM': 1.80, 'BBD': 2.00, 'BDT': 119.50, 'BGN': 1.80, 'BHD': 0.38, 'BIF': 2880.00, 'BMD': 1.00, 'BND': 1.35, 'BOB': 6.90, 'BRL': 5.60,
@@ -161,7 +129,6 @@ const fallbackRates = {
   'XCD': 2.70, 'XDR': 0.75, 'XOF': 600.00, 'XPF': 111.00, 'YER': 250.00, 'ZAR': 18.00, 'ZMW': 27.00, 'ZWL': 322.00
 };
 
-// Fetch latest currency rates (Open ER-API - free, 170+ currencies, no key)
 async function fetchCurrencyData() {
   if (currencyDataFetched) return;
   try {
@@ -169,71 +136,29 @@ async function fetchCurrencyData() {
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
     if (!data.rates) throw new Error('Invalid rates data');
-    units.currency.rates = data.rates; // e.g., { 'EUR': 0.85063, 'INR': 88.7, ... }
+    units.currency.rates = data.rates;
     currencyDataFetched = true;
     conversionResultEl.textContent = `Live rates loaded (${data.time_last_update_utc}).`;
     console.log(`Fetched live rates for ${Object.keys(data.rates).length} currencies on ${data.time_last_update_utc}.`);
-    setTimeout(() => { conversionResultEl.textContent = '—'; }, 3000); // Clear message
+    setTimeout(() => { conversionResultEl.textContent = '—'; }, 3000);
   } catch (e) {
     console.error('Currency fetch error:', e);
-    units.currency.rates = fallbackRates; // Use full static fallback
+    units.currency.rates = fallbackRates;
     conversionResultEl.textContent = 'Using cached rates (live fetch unavailable).';
   }
 }
 
-// Affiliate products data (all 8 restored)
 const products = [
-  {
-    name: 'One94store Crystal Ball Night Lamp',
-    image: 'https://m.media-amazon.com/images/I/51rV+9X4CQL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-1&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=39918f876a0a57dba40fd6fd2652f941&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'One94store Crystal Ball Night Lamp'
-  },
-  {
-    name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday',
-    image: 'https://m.media-amazon.com/images/I/61j2j1G5VJL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-7&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=b74ea1afcaebb59f4e164add5b6f16e8&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday'
-  },
-  {
-    name: 'VRB-Dec-Artificial-Crochet-Bouquet',
-    image: 'https://m.media-amazon.com/images/I/61U6C1d6Y0L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&dib=eyJ2IjoiMSJ9._-XP_23ET5ax-UIywqZTes-QyvrepCP1sB_NejkFn8v_p4Is624IGUr5ibaEYKnzhWMH7BXVzQMJ8SPui5WnYnCaILv2tb-yr0Uvs5QWZ8RXMBBbRf1LGcexGEAQQ7heub8bITuCVa6ZK11IJuHtFcqDQWLVFHmwehVhqa-bs6maRkdAxnxEq2ipkWmW23KAZecoPbC0Lz2pIVx-RzVDAaXvKe8JISVJ8OlAEEC3qQa65vXUo2NsUkWCyc8bcJsMvfkx-PjceGEoSqrOR0KtyQo5-lQ6LoikWTWJ38HuR3M.raWM1O0ducoBK_yilu668G65g-p5phAWBmPpO9GqIL0&dib_tag=se&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=08c142b799529104ee2f8323d66c4351&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'VRB-Dec-Artificial-Crochet-Bouquet'
-  },
-  {
-    name: 'Motorola-g45-Pantone-Moss-128',
-    image: 'https://m.media-amazon.com/images/I/61l7U4d+1XL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-13&linkCode=ll1&tag=birthdaytools-21&linkId=9d89fc68c76f7ce3c2cc1b788222c0ec&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'Motorola-g45-Pantone-Moss-128'
-  },
-  {
-    name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance',
-    image: 'https://m.media-amazon.com/images/I/71Y7UjX0eJL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-5&linkCode=ll1&tag=birthdaytools-21&linkId=a6165a9c77996478e54ed01ee2b5af64&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance'
-  },
-  {
-    name: 'OnePlus-Super-Silver-128GB-Storage',
-    image: 'https://m.media-amazon.com/images/I/71Kn99V4x7L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&dib=eyJ2IjoiMSJ9.nGS-vOpupiunqzbpB_8YBB8KWWjEw4KimDXF3EH0r-SyJapaViTwvB5S6c5oEFQLrI_YsmpyRQqvXRNdN4bLHdyAYARing8nLhpAp5gfjC4qUMIGikGuSgjkHs3eLYU9M-2z_YMUd1ZLjcTqKed3jEIKJ7OcgPb7C2YjxQagtLOMWYMesHeyefopz2nYFHa8lYQ64rNNmzhXcYP1HNNc5o_-WqgpxbO7KHAq2QUq2cY.Dr3bLTg8TPU2MQyLcwneCeIQpaCtpJ5s7JKUXagNiiw&dib_tag=se&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-3&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=11e371b8fbfd0177a94933aba0c6f7bf&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'OnePlus-Super-Silver-128GB-Storage'
-  },
-  {
-    name: 'Modern-Living-Tables-Furniture-Shelves',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image',
-    link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-6&linkCode=ll1&tag=birthdaytools-21&linkId=97e0e5bc6667f70a94d42b3c957c5541&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'Modern-Living-Tables-Furniture-Shelves'
-  },
-  {
-    name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image',
-    link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=3c0a20b1131f89fdb0f4f919c9d8f14b&language=en_IN&ref_=as_li_ss_tl',
-    alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture'
-  }
+  { name: 'One94store Crystal Ball Night Lamp', image: 'https://m.media-amazon.com/images/I/51rV+9X4CQL._AC_UL320_.jpg', link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-1&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=39918f876a0a57dba40fd6fd2652f941&language=en_IN&ref_=as_li_ss_tl', alt: 'One94store Crystal Ball Night Lamp' },
+  { name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday', image: 'https://m.media-amazon.com/images/I/61j2j1G5VJL._AC_UL320_.jpg', link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-7&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=b74ea1afcaebb59f4e164add5b6f16e8&language=en_IN&ref_=as_li_ss_tl', alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday' },
+  { name: 'VRB-Dec-Artificial-Crochet-Bouquet', image: 'https://m.media-amazon.com/images/I/61U6C1d6Y0L._AC_UL320_.jpg', link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=08c142b799529104ee2f8323d66c4351&language=en_IN&ref_=as_li_ss_tl', alt: 'VRB-Dec-Artificial-Crochet-Bouquet' },
+  { name: 'Motorola-g45-Pantone-Moss-128', image: 'https://m.media-amazon.com/images/I/61l7U4d+1XL._AC_UL320_.jpg', link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-13&linkCode=ll1&tag=birthdaytools-21&linkId=9d89fc68c76f7ce3c2cc1b788222c0ec&language=en_IN&ref_=as_li_ss_tl', alt: 'Motorola-g45-Pantone-Moss-128' },
+  { name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance', image: 'https://m.media-amazon.com/images/I/71Y7UjX0eJL._AC_UL320_.jpg', link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-5&linkCode=ll1&tag=birthdaytools-21&linkId=a6165a9c77996478e54ed01ee2b5af64&language=en_IN&ref_=as_li_ss_tl', alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance' },
+  { name: 'OnePlus-Super-Silver-128GB-Storage', image: 'https://m.media-amazon.com/images/I/71Kn99V4x7L._AC_UL320_.jpg', link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-3&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=11e371b8fbfd0177a94933aba0c6f7bf&language=en_IN&ref_=as_li_ss_tl', alt: 'OnePlus-Super-Silver-128GB-Storage' },
+  { name: 'Modern-Living-Tables-Furniture-Shelves', image: 'https://via.placeholder.com/200x200?text=Product+Image', link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-6&linkCode=ll1&tag=birthdaytools-21&linkId=97e0e5bc6667f70a94d42b3c957c5541&language=en_IN&ref_=as_li_ss_tl', alt: 'Modern-Living-Tables-Furniture-Shelves' },
+  { name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture', image: 'https://via.placeholder.com/200x200?text=Product+Image', link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=3c0a20b1131f89fdb0f4f919c9d8f14b&language=en_IN&ref_=as_li_ss_tl', alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture' }
 ];
 
-// Render affiliate products
 function renderAffiliateProducts() {
   const container = $('#affiliate-products');
   container.innerHTML = '';
@@ -276,20 +201,15 @@ const calculatePermBtn = $('#calculate-perm');
 const calculateCombBtn = $('#calculate-comb');
 const permResultEl = $('#perm-result');
 const combResultEl = $('#comb-result');
-const tabButtons = $all('.tab-button');
-const panels = $all('.calculator-panel');
-
-// Setup locale & timezone
+const sciDisplay = $('#sci-display');
 const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 const userLocale = navigator.language || 'en-US';
+
 tzEl.textContent = userTz;
 localeEl.textContent = userLocale;
-
-// Initialize inputs
 currentEl.value = toDateTimeLocalValue(new Date());
 dobEl.value = '';
 
-// Tab switching
 tabButtons.forEach(button => {
   button.addEventListener('click', () => {
     tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -300,7 +220,6 @@ tabButtons.forEach(button => {
   });
 });
 
-// Small-controls wiring
 document.querySelectorAll('.small-controls button').forEach(btn => {
   btn.addEventListener('click', (e) => {
     const action = btn.dataset.action;
@@ -311,7 +230,6 @@ document.querySelectorAll('.small-controls button').forEach(btn => {
   });
 });
 
-// Event listeners for Age Calculator
 dobEl.addEventListener('change', () => calculateAndRender(true));
 currentEl.addEventListener('change', () => calculateAndRender(false));
 recalcBtn.addEventListener('click', () => calculateAndRender(true));
@@ -321,10 +239,8 @@ resetBtn.addEventListener('click', () => {
   calculateAndRender(true);
 });
 
-// Live ticking for Age Calculator
 let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
-// Calculate and render for Age Calculator
 function calculateAndRender(forceFetchCelebs = false) {
   const dobVal = dobEl.value;
   const currentVal = currentEl.value || toDateTimeLocalValue(new Date());
@@ -358,7 +274,6 @@ function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
-// Fetch celebrities for Age Calculator
 async function fetchCelebritiesForDate(monthName, day) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${monthName} ${day}…</div>`;
   try {
@@ -397,17 +312,11 @@ async function fetchCelebritiesForDate(monthName, day) {
   }
 }
 
-// Conversion Calculator Logic
 function populateUnits(category) {
   fromUnitEl.innerHTML = '';
   toUnitEl.innerHTML = '';
   if (!category) return;
-  let unitList;
-  if (category === 'currency') {
-    unitList = units.currency.currencies.sort();
-  } else {
-    unitList = Object.keys(units[category].factors).sort();
-  }
+  let unitList = category === 'currency' ? units.currency.currencies.sort() : Object.keys(units[category].factors).sort();
   unitList.forEach(unit => {
     const opt = document.createElement('option');
     opt.value = unit;
@@ -423,17 +332,14 @@ function populateUnits(category) {
 
 categoryEl.addEventListener('change', async () => {
   const category = categoryEl.value;
-  if (category === 'currency' && !currencyDataFetched) {
-    await fetchCurrencyData();
-  }
+  if (category === 'currency' && !currencyDataFetched) await fetchCurrencyData();
   populateUnits(category);
 });
 
 swapBtn.addEventListener('click', () => {
   const fromVal = fromUnitEl.value;
-  const toVal = toUnitEl.value;
-  fromUnitEl.value = toVal;
   toUnitEl.value = fromVal;
+  fromUnitEl.value = toUnitEl.value;
 });
 
 convertBtn.addEventListener('click', () => {
@@ -469,7 +375,6 @@ convertBtn.addEventListener('click', () => {
   conversionResultEl.textContent = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
 });
 
-// Permutation/Combination Calculator Logic
 function permutation(n, r) {
   return factorial(n) / factorial(n - r);
 }
@@ -482,23 +387,47 @@ calculatePermBtn.addEventListener('click', () => {
   const n = parseInt(nValueEl.value);
   const r = parseInt(rValueEl.value);
   if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
-    permResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
+    permResultEl.innerHTML = 'Please enter valid n and r (0 ≤ r ≤ n) <span class="formula">Formula: n! / (n - r)!</span>';
     return;
   }
-  permResultEl.textContent = `Permutation (nPr) = ${permutation(n, r).toFixed(0)}`;
+  permResultEl.innerHTML = `Permutation (nPr) = ${permutation(n, r).toFixed(0)} <span class="formula">Formula: n! / (n - r)!</span>`;
 });
 
 calculateCombBtn.addEventListener('click', () => {
   const n = parseInt(nValueEl.value);
   const r = parseInt(rValueEl.value);
   if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
-    combResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
+    combResultEl.innerHTML = 'Please enter valid n and r (0 ≤ r ≤ n) <span class="formula">Formula: n! / (r! * (n - r)!)</span>';
     return;
   }
-  combResultEl.textContent = `Combination (nCr) = ${combination(n, r).toFixed(0)}`;
+  combResultEl.innerHTML = `Combination (nCr) = ${combination(n, r).toFixed(0)} <span class="formula">Formula: n! / (r! * (n - r)!)</span>`;
 });
 
-// Initial render
+// Scientific Calculator Logic
+let sciExpression = '';
+function sciAppend(val) {
+  sciExpression += val;
+  sciDisplay.value = sciExpression;
+}
+function sciClear() {
+  sciExpression = '';
+  sciDisplay.value = '';
+}
+function sciBackspace() {
+  sciExpression = sciExpression.slice(0, -1);
+  sciDisplay.value = sciExpression;
+}
+function sciCalculate() {
+  try {
+    const result = math.evaluate(sciExpression);
+    sciDisplay.value = Number.isFinite(result) ? result.toFixed(4) : 'Error';
+    sciExpression = result.toString();
+  } catch (error) {
+    sciDisplay.value = 'Error';
+    sciExpression = '';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderAffiliateProducts();
   calculateAndRender(true);
@@ -506,51 +435,3 @@ document.addEventListener('DOMContentLoaded', () => {
   categoryEl.value = 'length';
   populateUnits('length');
 });
-
-// Inline styles (move to style.css later if needed)
-const style = document.createElement('style');
-style.textContent = `
-  .product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 10px;
-    width: 200px;
-    display: inline-block;
-    vertical-align: top;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-  }
-  .product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  .product-image {
-    max-width: 180px;
-    height: auto;
-    display: block;
-    margin: 0 auto 10px;
-  }
-  .product-link:hover img {
-    opacity: 0.8;
-  }
-  .product-name {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 5px 0;
-    text-align: center;
-  }
-  .product-price {
-    font-size: 14px;
-    text-align: center;
-  }
-  .price-link {
-    color: #0073aa;
-    text-decoration: none;
-  }
-  .price-link:hover {
-    text-decoration: underline;
-    color: #005d87;
-  }
-`;
-document.head.appendChild(style);

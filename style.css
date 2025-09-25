@@ -1,288 +1,81 @@
-:root {
-  --bg: #f3f4f6; /* Soft gray background */
-  --card: #fff; /* White cards */
-  --muted: #6b7280; /* Gray text */
-  --accent: #2dd4bf; /* Teal-blue accent */
-  --border: #e5e7eb; /* Light gray borders */
-}
-
-* {
-  box-sizing: border-box;
-}
-
+/* style.css */
 body {
-  font-family: Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
-  color: #111;
-  background: var(--bg);
-  margin: 0;
-  padding: 24px;
-}
-
-.container {
-  max-width: 1100px;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
   margin: 0 auto;
+  padding: 20px;
+  line-height: 1.6;
 }
-
-header {
-  text-align: center;
-  margin-bottom: 18px;
+header, footer { text-align: center; }
+h1 { font-size: 2em; }
+h3 { margin-top: 20px; }
+.controls { margin: 20px 0; }
+.control-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; }
+input, select, button {
+  padding: 8px;
+  margin: 5px 0;
+  font-size: 1em;
 }
-
-h1 {
-  font-size: 26px;
-  margin: 6px 0;
-  color: var(--accent);
+button { cursor: pointer; background: #0073aa; color: white; border: none; border-radius: 4px; }
+button:hover { background: #005d87; }
+.small-controls button { padding: 5px; font-size: 0.9em; margin-right: 5px; }
+.tabs { margin-bottom: 20px; }
+.tab-button {
+  padding: 10px 20px;
+  margin-right: 5px;
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
 }
-
-.muted {
-  color: var(--muted);
+.tab-button.active { background: #0073aa; color: white; }
+.calculator-panel { display: none; padding: 20px; border: 1px solid #ddd; border-radius: 0 4px 4px 4px; }
+#affiliate-products { display: flex; flex-wrap: wrap; justify-content: center; }
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
+  width: 200px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
-
-.panel {
-  background: var(--card);
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 18px rgba(20, 20, 20, 0.04);
-  border: 1px solid var(--border);
-}
-
-.inputs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  align-items: start;
-}
-
-.input-block label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.input-block input {
+.product-card:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.product-image { max-width: 180px; height: auto; display: block; margin: 0 auto 10px; }
+.product-link:hover img { opacity: 0.8; }
+.product-name { font-size: 16px; font-weight: bold; margin: 5px 0; text-align: center; }
+.product-price { font-size: 14px; text-align: center; }
+.price-link { color: #0073aa; text-decoration: none; }
+.price-link:hover { text-decoration: underline; color: #005d87; }
+.celebrity { display: flex; justify-content: space-between; margin: 10px 0; }
+.left { flex: 1; }
+.right { margin-left: 10px; }
+.muted { color: #666; }
+.formula { font-style: italic; color: #666; margin-left: 10px; font-size: 0.9em; }
+.scientific-calculator { max-width: 320px; margin: 20px auto; }
+#sci-display {
   width: 100%;
+  height: 50px;
+  text-align: right;
+  font-size: 1.5em;
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  transition: border-color 0.2s;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
 }
-
-.input-block input:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.small-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.small-controls button {
-  padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--accent);
-  transition: background 0.2s, color 0.2s;
-}
-
-.small-controls button:hover {
-  background: var(--accent);
-  color: #fff;
-}
-
-.meta {
-  grid-column: 1 / -1;
-  margin-top: 8px;
-  color: var(--muted);
-}
-
-.result .age-box {
-  padding: 14px;
-  border-radius: 8px;
-  background: #f1f5f9;
-  border: 1px solid var(--border);
-}
-
-.bigline {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.smallline {
-  font-size: 14px;
-  margin-top: 6px;
-  color: var(--muted);
-}
-
-.xsmall {
-  font-size: 12px;
-}
-
-.buttons {
-  margin-top: 12px;
-  display: flex;
-  gap: 8px;
-}
-
-.buttons button {
-  padding: 8px 12px;
-  background: var(--accent);
-  border: none;
-  color: #fff;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.buttons button:hover {
-  background: #15b9a9; /* Darker teal on hover */
-}
-
-.buttons button#reset {
-  background: var(--card);
-  color: #111;
-  border: 1px solid var(--border);
-}
-
-.buttons button#reset:hover {
-  background: #f3f4f6;
-  color: var(--accent);
-}
-
-.celebs-list {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 360px;
-  overflow: auto;
-  padding-right: 6px;
-}
-
-.celebrity {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px;
-  background: var(--card);
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
-}
-
-.celebrity:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.celebrity .left {
-  flex: 1;
-}
-
-.celebrity .right {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-end;
-}
-
-.celebrity .small {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.celebrity .btn {
-  padding: 6px 8px;
-  border-radius: 8px;
-  background: #10b981;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 13px;
-  transition: background 0.2s;
-}
-
-.celebrity .btn:hover {
-  background: #059669;
-}
-
-.ad-placeholder {
-  height: 90px;
-  border-radius: 8px;
-  background: #f3f4f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  border: 1px solid var(--border);
-}
-
-.affiliate-grid {
+.sci-buttons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
 }
-
-.affiliate-item {
-  text-align: center;
-  background: var(--card);
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s, box-shadow 0.2s;
+.sci-buttons button {
+  padding: 15px;
+  font-size: 1.1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f0f0f0;
+  cursor: pointer;
 }
-
-.affiliate-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.affiliate-item a {
-  text-decoration: none;
-  color: #111;
-}
-
-.affiliate-item p {
-  margin: 8px 0;
-  font-size: 14px;
-  color: var(--accent);
-}
-
-.affiliate-item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.2s;
-}
-
-.affiliate-item img:hover {
-  transform: scale(1.05);
-}
-
-@media (max-width: 640px) {
-  .inputs {
-    grid-template-columns: 1fr;
-  }
-  .celebrity {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .celebrity .right {
-    align-items: flex-start;
-  }
-  .affiliate-grid {
-    grid-template-columns: 1fr;
-  }
-}
+.sci-buttons button:hover { background: #e0e0e0; }
