@@ -228,10 +228,19 @@ button:hover {
 footer {
   margin-top: 40px;
   text-align: center;
+  background: #26a69a;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+footer h2 {
+  font-size: 1.8em;
+  color: #003087;
+  margin-bottom: 15px;
 }
 
 .product-card {
-  border: 1px solid #388e3c;
+  border: 1px solid #4db6ac;
   border-radius: 8px;
   padding: 10px;
   margin: 10px;
@@ -244,7 +253,7 @@ footer {
 
 .product-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 8px #a5d6a7;
+  box-shadow: 0 4px 8px #80cbc4;
 }
 
 .product-image {
