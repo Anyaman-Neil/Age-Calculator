@@ -130,50 +130,50 @@ const products = [
   {
     name: 'One94store Crystal Ball Night Lamp',
     image: 'https://m.media-amazon.com/images/I/51rV+9X4CQL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH',
-    alt: 'One94store Crystal Ball Night Lamp'
+    link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&keywords=birthday+gifts&tag=birthdaytools-21',
+    alt: 'Crystal Ball Night Lamp for Birthday Gifts'
   },
   {
     name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday',
     image: 'https://m.media-amazon.com/images/I/61j2j1G5VJL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6',
-    alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday'
+    link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&keywords=birthday+gifts&tag=birthdaytools-21',
+    alt: 'Valentine Loveable Anniversary Birthday Gift'
   },
   {
     name: 'VRB-Dec-Artificial-Crochet-Bouquet',
     image: 'https://m.media-amazon.com/images/I/61U6C1d6Y0L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP',
-    alt: 'VRB-Dec-Artificial-Crochet-Bouquet'
+    link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&keywords=birthday+gifts&tag=birthdaytools-21',
+    alt: 'Artificial Crochet Bouquet for Birthday Gifts'
   },
   {
     name: 'Motorola-g45-Pantone-Moss-128',
     image: 'https://m.media-amazon.com/images/I/61l7U4d+1XL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ',
-    alt: 'Motorola-g45-Pantone-Moss-128'
+    link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&keywords=mobile&tag=birthdaytools-21',
+    alt: 'Motorola g45 Pantone Moss Smartphone'
   },
   {
     name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance',
     image: 'https://m.media-amazon.com/images/I/71Y7UjX0eJL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ',
-    alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance'
+    link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&keywords=mobile&tag=birthdaytools-21',
+    alt: 'iQOO Dimensity Processor Smartphone'
   },
   {
     name: 'OnePlus-Super-Silver-128GB-Storage',
     image: 'https://m.media-amazon.com/images/I/71Kn99V4x7L._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G',
-    alt: 'OnePlus-Super-Silver-128GB-Storage'
+    link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&keywords=mobile&tag=birthdaytools-21',
+    alt: 'OnePlus Super Silver 128GB Smartphone'
   },
   {
     name: 'Modern-Living-Tables-Furniture-Shelves',
     image: 'https://m.media-amazon.com/images/I/61T0M4I3KXL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2',
-    alt: 'Modern-Living-Tables-Furniture-Shelves'
+    link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&keywords=furniture&tag=birthdaytools-21',
+    alt: 'Modern Living Tables and Shelves'
   },
   {
     name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture',
     image: 'https://m.media-amazon.com/images/I/61P2F5Q0uHL._AC_UL320_.jpg',
-    link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4',
-    alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture'
+    link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&keywords=furniture&tag=birthdaytools-21',
+    alt: 'ObalTure Corduroy Decorative Furniture'
   }
 ];
 
