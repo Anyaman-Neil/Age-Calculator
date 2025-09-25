@@ -259,7 +259,6 @@ tabButtons.forEach(button => {
     const panel = $(`#${tabId}`);
     if (panel) {
       panel.style.display = 'block';
-      if (tabId === 'sci-calc') sciDisplay.focus(); // Auto-focus sci display
       if (tabId === 'conv-calc') {
         populateUnits(categoryEl.value);
         if (categoryEl.value === 'currency') fetchCurrencyData();
@@ -487,11 +486,11 @@ function sciCalculate() {
   }
 }
 
-sciDisplay.addEventListener('keydown', (e) => {
-  if ($('#sci-calc').style.display !== 'block') return; // Only handle when sci-calc is active
-  console.log('Key pressed:', e.key);
-  const keyMap = {
-    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
-    '+': '+', '-': '-', '*': '*', '/': '/', '^': '^', '.': '.', '(': '(', ')': ')',
-    'Enter': sciCalculate, 'Escape': sciClear, 'Backspace': sciBackspace,
-    's': 'sin(', 'c': 'cos(', 't': 'tan(', 'l': '
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, initializing...');
+  renderAffiliateProducts();
+  calculateAndRender(true);
+  tabButtons[0].click();
+  categoryEl.value = 'length';
+  populateUnits('length');
+});

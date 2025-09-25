@@ -3,7 +3,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: linear-gradient(to bottom, #fff176, #ffca28, #fbc02d);
+  background: #ffca28;
 }
 
 header {
@@ -182,10 +182,6 @@ button:hover {
   border-radius: 4px;
   background: #f9f9f9;
   color: #333;
-}
-
-#sci-display:focus {
-  outline: 2px solid #2e8b57;
 }
 
 .sci-buttons {
