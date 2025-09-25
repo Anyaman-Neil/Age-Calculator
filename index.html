@@ -1,11 +1,50 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multi Calculator Tool</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script> <!-- For Scientific Calc -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.min.js"></script>
 </head>
 <body>
   <header>
@@ -21,7 +60,6 @@
   </div>
 
   <div class="calculator-panel" id="age-calc" style="display: block;">
-    <!-- (Original content - unchanged) -->
     <div class="controls">
       <div class="control-group">
         <label>Date of Birth</label>
@@ -109,14 +147,14 @@
         <button id="calculate-comb">Calculate Combination (nCr)</button>
       </div>
 
-      <div id="perm-result">—</div>
-      <div id="comb-result">—</div>
+      <div id="perm-result">— <span class="formula">Formula: n! / (n - r)!</span></div>
+      <div id="comb-result">— <span class="formula">Formula: n! / (r! * (n - r)!)</span></div>
     </div>
   </div>
 
   <div class="calculator-panel" id="sci-calc" style="display: none;">
     <div class="scientific-calculator">
-      <input type="text" id="sci-display" readonly>
+      <input type="text" id="sci-display" readonly placeholder="0">
       <div class="sci-buttons">
         <button onclick="sciAppend('7')">7</button>
         <button onclick="sciAppend('8')">8</button>
@@ -143,8 +181,8 @@
         <button onclick="sciAppend('sqrt(')">√</button>
         <button onclick="sciAppend('exp(')">exp</button>
         <button onclick="sciAppend('pow(')">^</button>
-        <button onclick="sciAppend('PI')">π</button>
-        <button onclick="sciAppend('E')">e</button>
+        <button onclick="sciAppend('Math.PI')">π</button>
+        <button onclick="sciAppend('Math.E')">e</button>
         <button onclick="sciAppend('(')">(</button>
         <button onclick="sciAppend(')')">)</button>
       </div>

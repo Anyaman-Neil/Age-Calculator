@@ -1,75 +1,187 @@
-/* style.css */
 body {
   font-family: Arial, sans-serif;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  line-height: 1.6;
+  background: #f4f4f4;
 }
-header, footer { text-align: center; }
-h1 { font-size: 2em; }
-h3 { margin-top: 20px; }
-.controls { margin: 20px 0; }
-.control-group { margin-bottom: 15px; }
-label { display: block; margin-bottom: 5px; }
-input, select, button {
-  padding: 8px;
-  margin: 5px 0;
-  font-size: 1em;
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
 }
-button { cursor: pointer; background: #0073aa; color: white; border: none; border-radius: 4px; }
-button:hover { background: #005d87; }
-.small-controls button { padding: 5px; font-size: 0.9em; margin-right: 5px; }
-.tabs { margin-bottom: 20px; }
+
+header h1 {
+  font-size: 2.5em;
+  color: #333;
+}
+
+header p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
 .tab-button {
   padding: 10px 20px;
-  margin-right: 5px;
-  border: none;
-  background: #f0f0f0;
+  font-size: 1.1em;
   cursor: pointer;
-  border-radius: 4px 4px 0 0;
-}
-.tab-button.active { background: #0073aa; color: white; }
-.calculator-panel { display: none; padding: 20px; border: 1px solid #ddd; border-radius: 0 4px 4px 4px; }
-#affiliate-products { display: flex; flex-wrap: wrap; justify-content: center; }
-.product-card {
+  background: #e0e0e0;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px;
-  width: 200px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  margin-right: 5px;
 }
-.product-card:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-.product-image { max-width: 180px; height: auto; display: block; margin: 0 auto 10px; }
-.product-link:hover img { opacity: 0.8; }
-.product-name { font-size: 16px; font-weight: bold; margin: 5px 0; text-align: center; }
-.product-price { font-size: 14px; text-align: center; }
-.price-link { color: #0073aa; text-decoration: none; }
-.price-link:hover { text-decoration: underline; color: #005d87; }
-.celebrity { display: flex; justify-content: space-between; margin: 10px 0; }
-.left { flex: 1; }
-.right { margin-left: 10px; }
-.muted { color: #666; }
-.formula { font-style: italic; color: #666; margin-left: 10px; font-size: 0.9em; }
-.scientific-calculator { max-width: 320px; margin: 20px auto; }
+
+.tab-button.active {
+  background: #fff;
+  font-weight: bold;
+}
+
+.tab-button:hover {
+  background: #f0f0f0;
+}
+
+.calculator-panel {
+  display: none;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 0 4px 4px 4px;
+  background: #fff;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="datetime-local"], input[type="number"] {
+  width: 200px;
+}
+
+button {
+  background: #0073aa;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #005d87;
+}
+
+.small-controls {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.small-controls button {
+  padding: 5px 10px;
+  font-size: 0.9em;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.small-controls button:hover {
+  background: #e0e0e0;
+}
+
+#ymd, #hms, #totals, #refs, #conversion-result, #perm-result, #comb-result {
+  margin-top: 10px;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.formula {
+  font-style: italic;
+  color: #666;
+  font-size: 0.9em;
+}
+
+#celebs-list {
+  margin-top: 20px;
+}
+
+.celebrity {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.celebrity .left {
+  flex: 1;
+}
+
+.celebrity .right {
+  margin-left: 20px;
+}
+
+.btn {
+  padding: 5px 10px;
+  background: #0073aa;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: #005d87;
+}
+
+.muted {
+  color: #666;
+  font-style: italic;
+}
+
+.scientific-calculator {
+  max-width: 320px;
+  margin: 20px auto;
+}
+
 #sci-display {
   width: 100%;
   height: 50px;
   text-align: right;
   font-size: 1.5em;
   padding: 10px;
-  margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background: #f9f9f9;
 }
+
 .sci-buttons {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 5px;
 }
+
 .sci-buttons button {
   padding: 15px;
   font-size: 1.1em;
@@ -78,4 +190,62 @@ button:hover { background: #005d87; }
   background: #f0f0f0;
   cursor: pointer;
 }
-.sci-buttons button:hover { background: #e0e0e0; }
+
+.sci-buttons button:hover {
+  background: #e0e0e0;
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
+  width: 200px;
+  display: inline-block;
+  vertical-align: top;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.product-image {
+  max-width: 180px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.product-link:hover img {
+  opacity: 0.8;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0;
+  text-align: center;
+}
+
+.product-price {
+  font-size: 14px;
+  text-align: center;
+}
+
+.price-link {
+  color: #0073aa;
+  text-decoration: none;
+}
+
+.price-link:hover {
+  text-decoration: underline;
+  color: #005d87;
+}
