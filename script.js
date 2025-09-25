@@ -1,6 +1,5 @@
 // script.js
 // Multi Calculator Tool: Age, Conversions, Permutation/Combination, Scientific
-// Save as script.js in same folder as index.html/style.css
 
 // --- Utilities ---
 const $ = (sel) => document.querySelector(sel);
@@ -129,39 +128,10 @@ const fallbackRates = {
   'XCD': 2.70, 'XDR': 0.75, 'XOF': 600.00, 'XPF': 111.00, 'YER': 250.00, 'ZAR': 18.00, 'ZMW': 27.00, 'ZWL': 322.00
 };
 
-async function fetchCurrencyData() {
-  if (currencyDataFetched) return;
-  try {
-    const res = await fetch('https://open.er-api.com/v6/latest/USD', { mode: 'cors' });
-    if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json();
-    if (!data.rates) throw new Error('Invalid rates data');
-    units.currency.rates = data.rates;
-    currencyDataFetched = true;
-    conversionResultEl.textContent = `Live rates loaded (${data.time_last_update_utc}).`;
-    console.log(`Fetched live rates for ${Object.keys(data.rates).length} currencies on ${data.time_last_update_utc}.`);
-    setTimeout(() => { conversionResultEl.textContent = '—'; }, 3000);
-  } catch (e) {
-    console.error('Currency fetch error:', e);
-    units.currency.rates = fallbackRates;
-    conversionResultEl.textContent = 'Using cached rates (live fetch unavailable).';
-  }
-}
-
-const products = [
-  { name: 'One94store Crystal Ball Night Lamp', image: 'https://m.media-amazon.com/images/I/51rV+9X4CQL._AC_UL320_.jpg', link: 'https://www.amazon.in/One94store-Crystal-Ball-Night-Lamp/dp/B0CYTCD6TH?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-1&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=39918f876a0a57dba40fd6fd2652f941&language=en_IN&ref_=as_li_ss_tl', alt: 'One94store Crystal Ball Night Lamp' },
-  { name: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday', image: 'https://m.media-amazon.com/images/I/61j2j1G5VJL._AC_UL320_.jpg', link: 'https://www.amazon.in/GIFTMEBAZAR-Valentine-Loveable-Anniversary-Birthday/dp/B0DB7W1BB6?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-7&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=b74ea1afcaebb59f4e164add5b6f16e8&language=en_IN&ref_=as_li_ss_tl', alt: 'GIFTMEBAZAR Valentine Loveable Anniversary Birthday' },
-  { name: 'VRB-Dec-Artificial-Crochet-Bouquet', image: 'https://m.media-amazon.com/images/I/61U6C1d6Y0L._AC_UL320_.jpg', link: 'https://www.amazon.in/VRB-Dec-Artificial-Crochet-Bouquet/dp/B0DVQ75LVP?crid=J1P5W28EKWVF&keywords=birthday%2Bgifts&qid=1758690566&sprefix=%2Caps%2C477&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=08c142b799529104ee2f8323d66c4351&language=en_IN&ref_=as_li_ss_tl', alt: 'VRB-Dec-Artificial-Crochet-Bouquet' },
-  { name: 'Motorola-g45-Pantone-Moss-128', image: 'https://m.media-amazon.com/images/I/61l7U4d+1XL._AC_UL320_.jpg', link: 'https://www.amazon.in/Motorola-g45-Pantone-Moss-128/dp/B0FL21SZXQ?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-13&linkCode=ll1&tag=birthdaytools-21&linkId=9d89fc68c76f7ce3c2cc1b788222c0ec&language=en_IN&ref_=as_li_ss_tl', alt: 'Motorola-g45-Pantone-Moss-128' },
-  { name: 'iQOO-Dimensity-Processor-Military-Shock-Resistance', image: 'https://m.media-amazon.com/images/I/71Y7UjX0eJL._AC_UL320_.jpg', link: 'https://www.amazon.in/iQOO-Dimensity-Processor-Military-Shock-Resistance/dp/B0FC5XK9WZ?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-5&linkCode=ll1&tag=birthdaytools-21&linkId=a6165a9c77996478e54ed01ee2b5af64&language=en_IN&ref_=as_li_ss_tl', alt: 'iQOO-Dimensity-Processor-Military-Shock-Resistance' },
-  { name: 'OnePlus-Super-Silver-128GB-Storage', image: 'https://m.media-amazon.com/images/I/71Kn99V4x7L._AC_UL320_.jpg', link: 'https://www.amazon.in/OnePlus-Super-Silver-128GB-Storage/dp/B0D5YCYS1G?crid=2J1N6GKVULD80&keywords=mobile&qid=1758690893&sprefix=%2Caps%2C347&sr=8-3&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=11e371b8fbfd0177a94933aba0c6f7bf&language=en_IN&ref_=as_li_ss_tl', alt: 'OnePlus-Super-Silver-128GB-Storage' },
-  { name: 'Modern-Living-Tables-Furniture-Shelves', image: 'https://via.placeholder.com/200x200?text=Product+Image', link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-6&linkCode=ll1&tag=birthdaytools-21&linkId=97e0e5bc6667f70a94d42b3c957c5541&language=en_IN&ref_=as_li_ss_tl', alt: 'Modern-Living-Tables-Furniture-Shelves' },
-  { name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture', image: 'https://via.placeholder.com/200x200?text=Product+Image', link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=3c0a20b1131f89fdb0f4f919c9d8f14b&language=en_IN&ref_=as_li_ss_tl', alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture' }
-];
-
+// Render affiliate products
 function renderAffiliateProducts() {
   const container = $('#affiliate-products');
-  container.innerHTML = '';
+  container.innerHTML = ''; // Clear existing content
   products.forEach(product => {
     const div = document.createElement('div');
     div.className = 'product-card';
@@ -201,15 +171,20 @@ const calculatePermBtn = $('#calculate-perm');
 const calculateCombBtn = $('#calculate-comb');
 const permResultEl = $('#perm-result');
 const combResultEl = $('#comb-result');
-const sciDisplay = $('#sci-display');
+const tabButtons = $all('.tab-button');
+const panels = $all('.calculator-panel');
+
+// Setup locale & timezone
 const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 const userLocale = navigator.language || 'en-US';
-
 tzEl.textContent = userTz;
 localeEl.textContent = userLocale;
+
+// Initialize inputs
 currentEl.value = toDateTimeLocalValue(new Date());
 dobEl.value = '';
 
+// Tab switching
 tabButtons.forEach(button => {
   button.addEventListener('click', () => {
     tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -220,6 +195,7 @@ tabButtons.forEach(button => {
   });
 });
 
+// Small-controls wiring
 document.querySelectorAll('.small-controls button').forEach(btn => {
   btn.addEventListener('click', (e) => {
     const action = btn.dataset.action;
@@ -230,6 +206,7 @@ document.querySelectorAll('.small-controls button').forEach(btn => {
   });
 });
 
+// Event listeners for Age Calculator
 dobEl.addEventListener('change', () => calculateAndRender(true));
 currentEl.addEventListener('change', () => calculateAndRender(false));
 recalcBtn.addEventListener('click', () => calculateAndRender(true));
@@ -239,8 +216,10 @@ resetBtn.addEventListener('click', () => {
   calculateAndRender(true);
 });
 
+// Live ticking for Age Calculator
 let liveInterval = setInterval(() => calculateAndRender(false), 1000);
 
+// Calculate and render for Age Calculator
 function calculateAndRender(forceFetchCelebs = false) {
   const dobVal = dobEl.value;
   const currentVal = currentEl.value || toDateTimeLocalValue(new Date());
@@ -274,6 +253,7 @@ function calculateAndRender(forceFetchCelebs = false) {
   }
 }
 
+// Fetch celebrities for Age Calculator
 async function fetchCelebritiesForDate(monthName, day) {
   celebsList.innerHTML = `<div class="muted">Loading famous birthdays for ${monthName} ${day}…</div>`;
   try {
@@ -312,69 +292,47 @@ async function fetchCelebritiesForDate(monthName, day) {
   }
 }
 
+// Conversion Calculator Logic
 function populateUnits(category) {
   fromUnitEl.innerHTML = '';
   toUnitEl.innerHTML = '';
   if (!category) return;
-  let unitList = category === 'currency' ? units.currency.currencies.sort() : Object.keys(units[category].factors).sort();
-  unitList.forEach(unit => {
+  let unitList = category === 'currency' ? units.currency.currencies : Object.keys(units[category].factors);
+  unitList.forEach(u => {
     const opt = document.createElement('option');
-    opt.value = unit;
-    opt.textContent = unit;
+    opt.value = u;
+    opt.textContent = u;
     fromUnitEl.appendChild(opt.cloneNode(true));
     toUnitEl.appendChild(opt);
   });
-  if (unitList.length > 1) {
-    fromUnitEl.value = unitList[0];
-    toUnitEl.value = unitList[1];
-  }
 }
 
-categoryEl.addEventListener('change', async () => {
-  const category = categoryEl.value;
-  if (category === 'currency' && !currencyDataFetched) await fetchCurrencyData();
-  populateUnits(category);
+categoryEl.addEventListener('change', (e) => {
+  const cat = e.target.value;
+  populateUnits(cat);
+  if (cat === 'currency') fetchRates();
 });
 
 swapBtn.addEventListener('click', () => {
-  const fromVal = fromUnitEl.value;
-  toUnitEl.value = fromVal;
-  fromUnitEl.value = toUnitEl.value;
+  const from = fromUnitEl.value;
+  const to = toUnitEl.value;
+  fromUnitEl.value = to;
+  toUnitEl.value = from;
 });
 
 convertBtn.addEventListener('click', () => {
-  const category = categoryEl.value;
-  const fromUnit = fromUnitEl.value;
-  const toUnit = toUnitEl.value;
+  const type = categoryEl.value;
   const value = parseFloat(inputValueEl.value);
-
-  if (!category || !fromUnit || !toUnit || isNaN(value) || value < 0) {
-    conversionResultEl.textContent = 'Please select a category, units, and enter a valid positive number';
+  if (isNaN(value) || value < 0) {
+    conversionResultEl.textContent = 'Please enter a valid positive number';
     return;
   }
-
-  if (fromUnit === toUnit) {
-    conversionResultEl.textContent = `${value} ${fromUnit} = ${value} ${toUnit}`;
-    return;
-  }
-
-  let result;
-  if (category === 'currency') {
-    const rateFrom = units.currency.rates[fromUnit] || 1;
-    const rateTo = units.currency.rates[toUnit] || 1;
-    if (rateFrom === 1 || rateTo === 1) {
-      conversionResultEl.textContent = 'Rate unavailable for selected currency';
-      return;
-    }
-    result = (value / rateFrom) * rateTo;
-  } else {
-    const baseValue = value * units[category].factors[fromUnit];
-    result = baseValue / units[category].factors[toUnit];
-  }
-
-  conversionResultEl.textContent = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
+  const { from, to, factor } = conversionFactors[type];
+  const result = value * factor;
+  conversionResultEl.textContent = `${value} ${from} = ${result.toFixed(2)} ${to}`;
 });
 
+// Permutation/Combination Calculator Logic
 function permutation(n, r) {
   return factorial(n) / factorial(n - r);
 }
@@ -387,51 +345,74 @@ calculatePermBtn.addEventListener('click', () => {
   const n = parseInt(nValueEl.value);
   const r = parseInt(rValueEl.value);
   if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
-    permResultEl.innerHTML = 'Please enter valid n and r (0 ≤ r ≤ n) <span class="formula">Formula: n! / (n - r)!</span>';
+    permResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
     return;
   }
-  permResultEl.innerHTML = `Permutation (nPr) = ${permutation(n, r).toFixed(0)} <span class="formula">Formula: n! / (n - r)!</span>`;
+  permResultEl.textContent = `Permutation (nPr) = ${permutation(n, r).toFixed(0)}`;
 });
 
 calculateCombBtn.addEventListener('click', () => {
   const n = parseInt(nValueEl.value);
   const r = parseInt(rValueEl.value);
   if (isNaN(n) || isNaN(r) || n < 0 || r < 0 || r > n) {
-    combResultEl.innerHTML = 'Please enter valid n and r (0 ≤ r ≤ n) <span class="formula">Formula: n! / (r! * (n - r)!)</span>';
+    combResultEl.textContent = 'Please enter valid n and r (0 ≤ r ≤ n)';
     return;
   }
-  combResultEl.innerHTML = `Combination (nCr) = ${combination(n, r).toFixed(0)} <span class="formula">Formula: n! / (r! * (n - r)!)</span>`;
+  combResultEl.textContent = `Combination (nCr) = ${combination(n, r).toFixed(0)}`;
 });
 
-// Scientific Calculator Logic
-let sciExpression = '';
-function sciAppend(val) {
-  sciExpression += val;
-  sciDisplay.value = sciExpression;
-}
-function sciClear() {
-  sciExpression = '';
-  sciDisplay.value = '';
-}
-function sciBackspace() {
-  sciExpression = sciExpression.slice(0, -1);
-  sciDisplay.value = sciExpression;
-}
-function sciCalculate() {
-  try {
-    const result = math.evaluate(sciExpression);
-    sciDisplay.value = Number.isFinite(result) ? result.toFixed(4) : 'Error';
-    sciExpression = result.toString();
-  } catch (error) {
-    sciDisplay.value = 'Error';
-    sciExpression = '';
-  }
-}
-
+// Initial render
 document.addEventListener('DOMContentLoaded', () => {
   renderAffiliateProducts();
   calculateAndRender(true);
+  // Activate the first tab by default
   tabButtons[0].click();
-  categoryEl.value = 'length';
-  populateUnits('length');
 });
+
+// Inline styles (move to style.css later if needed)
+const style = document.createElement('style');
+style.textContent = `
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+  .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  .product-image {
+    max-width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+  }
+  .product-link:hover img {
+    opacity: 0.8;
+  }
+  .product-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px 0;
+    text-align: center;
+  }
+  .product-price {
+    font-size: 14px;
+    text-align: center;
+  }
+  .price-link {
+    color: #0073aa;
+    text-decoration: none;
+  }
+  .price-link:hover {
+    text-decoration: underline;
+    color: #005d87;
+  }
+`;
+document.head.appendChild(style);
