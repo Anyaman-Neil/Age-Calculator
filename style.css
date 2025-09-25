@@ -232,7 +232,7 @@ button:hover {
 footer {
   margin-top: 40px;
   text-align: center;
-  background: #26a69a;
+  background: #78909c;
   padding: 20px;
   border-radius: 8px;
 }
@@ -244,7 +244,7 @@ footer h2 {
 }
 
 .product-card {
-  border: 1px solid #4db6ac;
+  border: 1px solid #90a4ae;
   border-radius: 8px;
   padding: 10px;
   margin: 10px;
@@ -257,7 +257,7 @@ footer h2 {
 
 .product-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 8px #80cbc4;
+  box-shadow: 0 4px 8px #b0bec5;
 }
 
 .product-image {
