@@ -486,6 +486,30 @@ function sciCalculate() {
   }
 }
 
+sciDisplay.addEventListener('keydown', (e) => {
+  const key = e.key;
+  console.log('Sci keydown:', key);
+  if (/[0-9]/.test(key)) sciAppend(key);
+  else if (key === '.') sciAppend('.');
+  else if (key === '+') sciAppend('+');
+  else if (key === '-') sciAppend('-');
+  else if (key === '*') sciAppend('*');
+  else if (key === '/') sciAppend('/');
+  else if (key === '^') sciAppend('^');
+  else if (key === '(') sciAppend('(');
+  else if (key === ')') sciAppend(')');
+  else if (key === 'Enter' || key === '=') sciCalculate();
+  else if (key === 'Backspace') sciBackspace();
+  else if (key === 'Escape') sciClear();
+  else if (key.toLowerCase() === 's') sciAppend('sin(');
+  else if (key.toLowerCase() === 'c') sciAppend('cos(');
+  else if (key.toLowerCase() === 't') sciAppend('tan(');
+  else if (key.toLowerCase() === 'l') sciAppend('log(');
+  else if (key.toLowerCase() === 'r') sciAppend('sqrt(');
+  else if (key.toLowerCase() === 'e') sciAppend('exp(');
+  e.preventDefault();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded, initializing...');
   renderAffiliateProducts();
