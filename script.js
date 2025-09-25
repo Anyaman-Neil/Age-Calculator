@@ -75,7 +75,7 @@ function factorial(n) {
   return result;
 }
 
-// Conversion units and factors
+// Conversion units and factors (non-currency)
 const units = {
   length: {
     base: 'm',
@@ -123,27 +123,37 @@ const units = {
   },
   currency: {
     base: 'USD',
-    currencies: ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'BRL', 'RUB', 'ZAR'],
-    rates: {}
+    currencies: [], // Will be populated dynamically
+    rates: {} // Will be populated dynamically
   }
 };
 
-let ratesFetched = false;
+let currencyDataFetched = false;
 
-// Fetch currency exchange rates
-async function fetchRates() {
-  if (ratesFetched) return;
+// Fetch currency data (list + rates) from reliable free API
+async function fetchCurrencyData() {
+  if (currencyDataFetched) return;
   try {
-    const res = await fetch('https://api.exchangerate.host/latest?base=USD');
-    const data = await res.json();
-    units.currency.rates = data.rates;
-    ratesFetched = true;
+    // Fetch all available currencies
+    const currenciesRes = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json');
+    if (!currenciesRes.ok) throw new Error('Failed to fetch currencies');
+    const currenciesData = await currenciesRes.json();
+    units.currency.currencies = Object.keys(currenciesData);
+
+    // Fetch latest rates (USD base)
+    const ratesRes = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json');
+    if (!ratesRes.ok) throw new Error('Failed to fetch rates');
+    const ratesData = await ratesRes.json();
+    units.currency.rates = ratesData.usd; // e.g., { eur: 0.92, gbp: 0.77, ... }
+
+    currencyDataFetched = true;
+    console.log(`Loaded ${units.currency.currencies.length} currencies with latest rates.`);
   } catch (e) {
-    console.error('Failed to fetch currency rates:', e);
-    units.currency.rates = units.currency.currencies.reduce((acc, curr) => {
-      acc[curr] = 1; // Fallback to 1:1 if fetch fails
-      return acc;
-    }, {});
+    console.error('Currency fetch error:', e);
+    conversionResultEl.textContent = 'Failed to load currency data. Please check your connection.';
+    // Fallback: Use a minimal set if fetch fails (but API is reliable, so rare)
+    units.currency.currencies = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'BRL', 'RUB', 'ZAR'];
+    units.currency.rates = units.currency.currencies.reduce((acc, curr) => { acc[curr.toLowerCase()] = 1; return acc; }, {});
   }
 }
 
@@ -368,7 +378,12 @@ function populateUnits(category) {
   fromUnitEl.innerHTML = '';
   toUnitEl.innerHTML = '';
   if (!category) return;
-  let unitList = category === 'currency' ? units.currency.currencies : Object.keys(units[category].factors);
+  let unitList;
+  if (category === 'currency') {
+    unitList = units.currency.currencies;
+  } else {
+    unitList = Object.keys(units[category].factors);
+  }
   unitList.forEach(unit => {
     const opt = document.createElement('option');
     opt.value = unit;
@@ -376,12 +391,19 @@ function populateUnits(category) {
     fromUnitEl.appendChild(opt.cloneNode(true));
     toUnitEl.appendChild(opt);
   });
+  // Default to first options if populated
+  if (unitList.length > 0) {
+    fromUnitEl.value = unitList[0];
+    toUnitEl.value = unitList[1] || unitList[0];
+  }
 }
 
-categoryEl.addEventListener('change', () => {
+categoryEl.addEventListener('change', async () => {
   const category = categoryEl.value;
+  if (category === 'currency') {
+    await fetchCurrencyData(); // Fetch on demand
+  }
   populateUnits(category);
-  if (category === 'currency') fetchRates();
 });
 
 swapBtn.addEventListener('click', () => {
@@ -409,14 +431,14 @@ convertBtn.addEventListener('click', async () => {
 
   let result;
   if (category === 'currency') {
-    if (!ratesFetched) await fetchRates();
-    if (!units.currency.rates[fromUnit] || !units.currency.rates[toUnit]) {
-      conversionResultEl.textContent = 'Currency rates not available';
+    if (!currencyDataFetched) await fetchCurrencyData();
+    const rateFrom = units.currency.rates[fromUnit.toLowerCase()];
+    const rateTo = units.currency.rates[toUnit.toLowerCase()];
+    if (!rateFrom || !rateTo) {
+      conversionResultEl.textContent = 'Rate not available for selected currencies';
       return;
     }
-    const rateFrom = units.currency.rates[fromUnit];
-    const rateTo = units.currency.rates[toUnit];
-    result = (value / rateFrom) * rateTo;
+    result = (value * rateFrom) / rateTo; // Convert: value * (from_to_base / to_to_base)
   } else {
     const baseValue = value * units[category].factors[fromUnit];
     result = baseValue / units[category].factors[toUnit];
@@ -455,12 +477,14 @@ calculateCombBtn.addEventListener('click', () => {
 });
 
 // Initial render
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   renderAffiliateProducts();
   calculateAndRender(true);
   tabButtons[0].click();
   categoryEl.value = 'length';
   populateUnits('length');
+  // Pre-fetch currency data in background for faster first use
+  fetchCurrencyData();
 });
 
 // Inline styles (move to style.css later if needed)
