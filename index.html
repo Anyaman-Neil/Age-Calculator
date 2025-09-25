@@ -3,153 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ✅ SEO Titles and Descriptions -->
-  <title>Multi Calculator Tool | Age, Conversion & Permutation Combination Calculator</title>
-  <meta name="description" content="Free multi calculator tool online. Calculate your exact age, do unit conversions, and solve permutation & combination (nPr & nCr) problems instantly.">
-  <meta name="keywords" content="age calculator, birthday calculator, permutation calculator, combination calculator, nPr calculator, nCr calculator, conversion calculator, km to miles, hours to minutes, cm to inches">
-
-  <!-- ✅ Social Sharing (Open Graph) -->
-  <meta property="og:title" content="Multi Calculator Tool | Free Online Calculator">
-  <meta property="og:description" content="Free online tool for age calculation, conversions, and permutation/combination problems.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://anyaman-neil.github.io/Age-Calculator/">
-  <meta property="og:image" content="https://anyaman-neil.github.io/Age-Calculator/preview.png">
-
-  <!-- ✅ Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Multi Calculator Tool">
-  <meta name="twitter:description" content="Free online calculator for age, conversions, and permutations & combinations.">
-
-  <!-- ✅ Schema Markup -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Multi Calculator Tool",
-    "url": "https://anyaman-neil.github.io/Age-Calculator/",
-    "applicationCategory": "Calculator",
-    "operatingSystem": "All",
-    "description": "Free online calculator to calculate age, unit conversions, and permutations & combinations.",
-    "creator": {
-      "@type": "Person",
-      "name": "Anyaman Banerjee"
-    }
-  }
-  </script>
-
-  <!-- ✅ Styles -->
+  <title>Multi Calculator Tool</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="google-site-verification" content="ABMJb7fARPuR1CzB6g_bJau7wmAlo61Sz0TB-PBNXq0" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Multi Calculator Tool</h1>
-      <p>Hey there! Calculate your age, conversions, or math problems below—let’s make numbers fun!</p>
-    </header>
+  <header>
+    <h1>Multi Calculator Tool</h1>
+    <p>Hey there! Calculate your age, conversions, or math problems below—let’s make numbers fun!</p>
+  </header>
 
-    <!-- Calculator Tabs -->
-    <div class="calculator-tabs">
-      <button class="tab-button active" data-tab="age-calculator">Age Calculator</button>
-      <button class="tab-button" data-tab="conversion-calculator">Conversion Calculator</button>
-      <button class="tab-button" data-tab="perm-comb-calculator">Perm/Comb Calculator</button>
+  <div class="tabs">
+    <button class="tab-button active" data-tab="age-calc">Age Calculator</button>
+    <button class="tab-button" data-tab="conv-calc">Conversion Calculator</button>
+    <button class="tab-button" data-tab="perm-calc">Perm/Comb Calculator</button>
+  </div>
+
+  <div class="calculator-panel" id="age-calc" style="display: block;">
+    <div class="controls">
+      <div class="control-group">
+        <label>Date of Birth</label>
+        <input type="datetime-local" id="dob">
+        <div class="small-controls">
+          <button data-action="dob" data-delta="-1d">-1 day</button>
+          <button data-action="dob" data-delta="+1d">+1 day</button>
+          <button data-action="dob" data-delta="-1m">-1 month</button>
+          <button data-action="dob" data-delta="+1m">+1 month</button>
+          <button data-action="dob" data-delta="-1y">-1 year</button>
+          <button data-action="dob" data-delta="+1y">+1 year</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Current date</label>
+        <input type="datetime-local" id="current">
+        <div class="small-controls">
+          <button data-action="current" data-delta="-1d">-1 day</button>
+          <button data-action="current" data-delta="+1d">+1 day</button>
+          <button data-action="current" data-delta="-1m">-1 month</button>
+          <button data-action="current" data-delta="+1m">+1 month</button>
+          <button data-action="current" data-delta="-1y">-1 year</button>
+          <button data-action="current" data-delta="+1y">+1 year</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div>Detected timezone: <span id="tz"></span></div>
+        <div>Locale: <span id="locale"></span></div>
+      </div>
+
+      <h3>Your age (live)</h3>
+      <div id="ymd">—</div>
+      <div id="hms">—</div>
+      <div id="totals">—</div>
+      <div id="refs">—</div>
+
+      <div class="control-group">
+        <button id="recalc">Recalculate now</button>
+        <button id="reset">Reset</button>
+      </div>
+
+      <h3>On the Same Day</h3>
+      <div id="celebs-list"></div>
     </div>
+  </div>
 
-    <!-- Calculator Panels -->
-    <div class="calculator-panels">
-      <!-- Age Calculator Panel -->
-      <div class="calculator-panel" id="age-calculator">
-        <div class="panel">
-          <div>
-            <label for="dob">Date of Birth</label>
-            <input type="datetime-local" id="dob" name="dob">
-            <div class="small-controls">
-              <button data-action="dob" data-delta="-1d">-1 day</button>
-              <button data-action="dob" data-delta="+1d">+1 day</button>
-              <button data-action="dob" data-delta="-1m">-1 month</button>
-              <button data-action="dob" data-delta="+1m">+1 month</button>
-              <button data-action="dob" data-delta="-1y">-1 year</button>
-              <button data-action="dob" data-delta="+1y">+1 year</button>
-            </div>
-          </div>
+  <div class="calculator-panel" id="conv-calc" style="display: none;">
+    <div class="controls">
+      <label>Select Category:</label>
+      <select id="category">
+        <option value="length">Length</option>
+        <option value="time">Time</option>
+        <option value="speed">Speed</option>
+        <option value="currency">Currency</option>
+      </select>
 
-          <div>
-            <label for="current">Current date</label>
-            <input type="datetime-local" id="current" name="current">
-            <div class="small-controls">
-              <button data-action="current" data-delta="-1d">-1 day</button>
-              <button data-action="current" data-delta="+1d">+1 day</button>
-              <button data-action="current" data-delta="-1m">-1 month</button>
-              <button data-action="current" data-delta="+1m">+1 month</button>
-              <button data-action="current" data-delta="-1y">-1 year</button>
-              <button data-action="current" data-delta="+1y">+1 year</button>
-            </div>
-          </div>
+      <label>From:</label>
+      <select id="from-unit"></select>
 
-          <div class="meta">
-            <span>Detected timezone: <span id="tz"></span></span>
-            <span>Locale: <span id="locale"></span></span>
-          </div>
+      <label>To:</label>
+      <select id="to-unit"></select>
 
-          <h2>Your age (live)</h2>
-          <div id="ymd" class="age-box">—</div>
-          <div id="hms" class="age-box">—</div>
-          <div id="totals" class="age-box">—</div>
-          <div id="refs" class="age-box">—</div>
+      <button id="swap-units">Swap</button>
 
-          <div class="buttons">
-            <button id="recalc">Recalculate now</button>
-            <button id="reset">Reset</button>
-          </div>
+      <label>Input Value:</label>
+      <input type="number" id="input-value" min="0" step="any">
 
-          <h2>On the Same Day</h2>
-          <div id="celebs-list" class="celebs-list"></div>
-        </div>
-      </div>
-
-      <!-- Conversion Calculator Panel -->
-      <div class="calculator-panel" id="conversion-calculator" style="display: none;">
-        <div class="panel">
-          <label for="conversion-type">Select Conversion Type:</label>
-          <select id="conversion-type">
-            <option value="distance">Distance (km to miles)</option>
-            <option value="time">Time (hours to minutes)</option>
-            <option value="speed">Speed (km/h to m/s)</option>
-            <option value="length">Length (cm to inches)</option>
-          </select>
-
-          <label for="input-value">Input Value:</label>
-          <input type="number" id="input-value" placeholder="Enter value" step="0.01">
-
-          <button id="convert">Convert</button>
-          <div id="conversion-result" class="age-box">—</div>
-        </div>
-      </div>
-
-      <!-- Permutation/Combination Calculator Panel -->
-      <div class="calculator-panel" id="perm-comb-calculator" style="display: none;">
-        <div class="panel">
-          <label for="n-value">n (total items):</label>
-          <input type="number" id="n-value" placeholder="Enter n" min="0">
-
-          <label for="r-value">r (items to choose):</label>
-          <input type="number" id="r-value" placeholder="Enter r" min="0">
-
-          <div class="buttons">
-            <button id="calculate-perm">Calculate Permutation (nPr)</button>
-            <button id="calculate-comb">Calculate Combination (nCr)</button>
-          </div>
-          <div id="perm-result" class="age-box">—</div>
-          <div id="comb-result" class="age-box">—</div>
-        </div>
-      </div>
+      <button id="convert">Convert</button>
+      <div id="conversion-result">—</div>
     </div>
+  </div>
 
-    <!-- Affiliate Products -->
+  <div class="calculator-panel" id="perm-calc" style="display: none;">
+    <div class="controls">
+      <label>n (total items):</label>
+      <input type="number" id="n-value" min="0">
+
+      <label>r (items to choose):</label>
+      <input type="number" id="r-value" min="0">
+
+      <div class="control-group">
+        <button id="calculate-perm">Calculate Permutation (nPr)</button>
+        <button id="calculate-comb">Calculate Combination (nCr)</button>
+      </div>
+
+      <div id="perm-result">—</div>
+      <div id="comb-result">—</div>
+    </div>
+  </div>
+
+  <footer>
     <h2>Recommended Birthday Gifts & Time-Related Products</h2>
     <div id="affiliate-products"></div>
-  </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>

@@ -75,6 +75,78 @@ function factorial(n) {
   return result;
 }
 
+// Conversion units and factors
+const units = {
+  length: {
+    base: 'm',
+    factors: {
+      mm: 0.001,
+      cm: 0.01,
+      m: 1,
+      km: 1000,
+      inch: 0.0254,
+      foot: 0.3048,
+      yard: 0.9144,
+      mile: 1609.34,
+      nautical_mile: 1852,
+      light_year: 9.4607e15,
+      au: 1.496e11,
+      parsec: 3.0857e16,
+      planck_length: 1.616255e-35
+    }
+  },
+  time: {
+    base: 's',
+    factors: {
+      ms: 0.001,
+      s: 1,
+      min: 60,
+      h: 3600,
+      day: 86400,
+      week: 604800,
+      month: 2629746, // approximate (30.42 days)
+      year: 31556952 // approximate (365.24 days)
+    }
+  },
+  speed: {
+    base: 'm/s',
+    factors: {
+      'm/s': 1,
+      'km/h': 0.277778,
+      mph: 0.44704,
+      'ft/s': 0.3048,
+      knot: 0.514444,
+      'km/s': 1000,
+      'mile/s': 1609.34,
+      'c': 299792458 // speed of light
+    }
+  },
+  currency: {
+    base: 'USD',
+    currencies: ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'BRL', 'RUB', 'ZAR'],
+    rates: {}
+  }
+};
+
+let ratesFetched = false;
+
+// Fetch currency exchange rates
+async function fetchRates() {
+  if (ratesFetched) return;
+  try {
+    const res = await fetch('https://api.exchangerate.host/latest?base=USD');
+    const data = await res.json();
+    units.currency.rates = data.rates;
+    ratesFetched = true;
+  } catch (e) {
+    console.error('Failed to fetch currency rates:', e);
+    units.currency.rates = units.currency.currencies.reduce((acc, curr) => {
+      acc[curr] = 1; // Fallback to 1:1 if fetch fails
+      return acc;
+    }, {});
+  }
+}
+
 // Affiliate products data
 const products = [
   {
@@ -115,13 +187,13 @@ const products = [
   },
   {
     name: 'Modern-Living-Tables-Furniture-Shelves',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://via.placeholder.com/200x200?text=Product+Image',
     link: 'https://www.amazon.in/Modern-Living-Tables-Furniture-Shelves/dp/B0FNWMP3S2?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-6&linkCode=ll1&tag=birthdaytools-21&linkId=97e0e5bc6667f70a94d42b3c957c5541&language=en_IN&ref_=as_li_ss_tl',
     alt: 'Modern-Living-Tables-Furniture-Shelves'
   },
   {
     name: 'ObalTure-Entryway-Corduroy-Decorative-Furniture',
-    image: 'https://via.placeholder.com/200x200?text=Product+Image', // Replace with real image URL from product page
+    image: 'https://via.placeholder.com/200x200?text=Product+Image',
     link: 'https://www.amazon.in/ObalTure-Entryway-Corduroy-Decorative-Furniture/dp/B0D583FXQ4?crid=2DHGSN9IL3XSG&dib=eyJ2IjoiMSJ9.vh7NgkUqLi2ssOaGYN92PTyZu8fySIR70bmo0NqCw9WaBJmnbDJThRZhIsmXa3-upazTiCNVwDtD8OU9Ty8RBoBYvsSql5R_AmdHMdrMahdNnzVRty_VLd7DoFLm2v2fkW0l-Y-uUq_v3RbvE900Fg37pqB4b6bbX5O9aQXAftVbi4o-WZe-6IEGBRx1klSAdm6aqO0xWpMLQp-8C3HCMsWsvD0EoY9UoIzLtRaUGrRPqpEJ2WfoK97Iyq_-JWlHZORydY8VgVtEttAnwAy_zYiyPk7CxF73NC6sbcgLmWc.5CfsOfQGpkigankrn3BOcER4Tonq-FxYQR-W-87_MP0&dib_tag=se&keywords=furniture&qid=1758690962&sprefix=%2Caps%2C352&sr=8-10&th=1&linkCode=ll1&tag=birthdaytools-21&linkId=3c0a20b1131f89fdb0f4f919c9d8f14b&language=en_IN&ref_=as_li_ss_tl',
     alt: 'ObalTure-Entryway-Corduroy-Decorative-Furniture'
   }
@@ -130,7 +202,7 @@ const products = [
 // Render affiliate products
 function renderAffiliateProducts() {
   const container = $('#affiliate-products');
-  container.innerHTML = ''; // Clear existing content
+  container.innerHTML = '';
   products.forEach(product => {
     const div = document.createElement('div');
     div.className = 'product-card';
@@ -157,7 +229,10 @@ const refsEl = $('#refs');
 const celebsList = $('#celebs-list');
 const recalcBtn = $('#recalc');
 const resetBtn = $('#reset');
-const conversionTypeEl = $('#conversion-type');
+const categoryEl = $('#category');
+const fromUnitEl = $('#from-unit');
+const toUnitEl = $('#to-unit');
+const swapBtn = $('#swap-units');
 const inputValueEl = $('#input-value');
 const convertBtn = $('#convert');
 const conversionResultEl = $('#conversion-result');
@@ -289,23 +364,65 @@ async function fetchCelebritiesForDate(monthName, day) {
 }
 
 // Conversion Calculator Logic
-const conversionFactors = {
-  distance: { from: 'km', to: 'miles', factor: 0.621371 },
-  time: { from: 'hours', to: 'minutes', factor: 60 },
-  speed: { from: 'km/h', to: 'm/s', factor: 0.277778 },
-  length: { from: 'cm', to: 'inches', factor: 0.393701 }
-};
+function populateUnits(category) {
+  fromUnitEl.innerHTML = '';
+  toUnitEl.innerHTML = '';
+  if (!category) return;
+  let unitList = category === 'currency' ? units.currency.currencies : Object.keys(units[category].factors);
+  unitList.forEach(unit => {
+    const opt = document.createElement('option');
+    opt.value = unit;
+    opt.textContent = unit;
+    fromUnitEl.appendChild(opt.cloneNode(true));
+    toUnitEl.appendChild(opt);
+  });
+}
 
-convertBtn.addEventListener('click', () => {
-  const type = conversionTypeEl.value;
+categoryEl.addEventListener('change', () => {
+  const category = categoryEl.value;
+  populateUnits(category);
+  if (category === 'currency') fetchRates();
+});
+
+swapBtn.addEventListener('click', () => {
+  const fromVal = fromUnitEl.value;
+  const toVal = toUnitEl.value;
+  fromUnitEl.value = toVal;
+  toUnitEl.value = fromVal;
+});
+
+convertBtn.addEventListener('click', async () => {
+  const category = categoryEl.value;
+  const fromUnit = fromUnitEl.value;
+  const toUnit = toUnitEl.value;
   const value = parseFloat(inputValueEl.value);
-  if (isNaN(value) || value < 0) {
-    conversionResultEl.textContent = 'Please enter a valid positive number';
+
+  if (!category || !fromUnit || !toUnit || isNaN(value) || value < 0) {
+    conversionResultEl.textContent = 'Please select a category, units, and enter a valid positive number';
     return;
   }
-  const { from, to, factor } = conversionFactors[type];
-  const result = value * factor;
-  conversionResultEl.textContent = `${value} ${from} = ${result.toFixed(2)} ${to}`;
+
+  if (fromUnit === toUnit) {
+    conversionResultEl.textContent = `${value} ${fromUnit} = ${value} ${toUnit}`;
+    return;
+  }
+
+  let result;
+  if (category === 'currency') {
+    if (!ratesFetched) await fetchRates();
+    if (!units.currency.rates[fromUnit] || !units.currency.rates[toUnit]) {
+      conversionResultEl.textContent = 'Currency rates not available';
+      return;
+    }
+    const rateFrom = units.currency.rates[fromUnit];
+    const rateTo = units.currency.rates[toUnit];
+    result = (value / rateFrom) * rateTo;
+  } else {
+    const baseValue = value * units[category].factors[fromUnit];
+    result = baseValue / units[category].factors[toUnit];
+  }
+
+  conversionResultEl.textContent = `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
 });
 
 // Permutation/Combination Calculator Logic
@@ -341,8 +458,9 @@ calculateCombBtn.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
   renderAffiliateProducts();
   calculateAndRender(true);
-  // Activate the first tab by default
   tabButtons[0].click();
+  categoryEl.value = 'length';
+  populateUnits('length');
 });
 
 // Inline styles (move to style.css later if needed)
